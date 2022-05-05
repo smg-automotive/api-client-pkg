@@ -40,15 +40,23 @@ class ApiClient {
     return `${baseUrl}${path}`
   }
 
-  configure = (configuration: ApiClientConfiguration) => {
-    this.configuration = configuration
+  configure = (configuration: Partial<ApiClientConfiguration>) => {
+    this.configuration = {
+      ...this.configuration,
+      ...configuration,
+    }
   }
 
   get = <ResponseType>(
     path: string,
     options?: RequestOptions,
   ): Promise<ResponseType> => {
-    return fetch(this.getPath(path, options)).then((res) => {
+    return fetch(this.getPath(path, options), {
+      method: 'GET',
+    }).then((res) => {
+      if (!res.ok) {
+        return Promise.reject(res)
+      }
       return res.json()
     })
   }
