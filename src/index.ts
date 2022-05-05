@@ -53,11 +53,8 @@ class ApiClient {
   ): Promise<ResponseType> => {
     return fetch(this.getPath(path, options), {
       method: 'GET',
-    }).then((res) => {
-      if (!res.ok) {
-        return Promise.reject(res)
-      }
-      return res.json()
+    }).then((response) => {
+      return response.ok ? response.json() : Promise.reject(response)
     })
   }
 
