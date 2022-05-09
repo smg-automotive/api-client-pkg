@@ -42,6 +42,10 @@ interface Car {
 
 // data has type Car
 const data = await ApiClient.get<Car>('/listings/search')
+
+// data has type { id: string } and body is typed as Car
+const data = await ApiClient.post<{ id: string }, Car>('/listings/create',
+  { make: 'bmw', horsepower: 300 },)
 ````
 
 ### Parameters
