@@ -1,4 +1,4 @@
-import ApiClient from '../index'
+import { ApiClient } from '../index'
 
 const fetchMock = jest.fn()
 global.fetch = fetchMock

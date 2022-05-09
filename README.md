@@ -9,6 +9,10 @@
 npm install @smg-automotive/api-client-pkg
 ```
 
+````javascript
+import { ApiClient } from "@smg-automotive/api-client-pkg"
+````
+
 ### Configuration
 
 The available instance methods are listed below. The specified config will be merged with the instance config.

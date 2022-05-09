@@ -4,6 +4,7 @@
   "description": "Simple wrapper with convenience features to connect to your favorite API",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist/**/*"
   ],

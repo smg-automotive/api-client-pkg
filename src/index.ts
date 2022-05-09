@@ -144,5 +144,6 @@ class ApiClient {
   }
 }
 
-export { ResponseError }
-export default ApiClient.getInstance()
+const apiClient = ApiClient.getInstance()
+
+export { ResponseError, apiClient as ApiClient }
