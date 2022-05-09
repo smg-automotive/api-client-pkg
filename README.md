@@ -49,6 +49,7 @@ var data = await ApiClient.post<{ id: string }, Car>('/listings/create',
 ### Parameters
 
 If your request URL contains parameters, you can use curly brackets and the ApiClient replaces it with the passed data.
+This is aligned with the OpenAPI specification used by Swagger hence you can easily search for occurrences.
 
 ````javascript
 // fetch is called with baseUrl/dealers/123/listings/456
@@ -139,6 +140,13 @@ follows:
 jest.spyOn(ApiClient, "get").mockImplementation((path, options) => {
   // do something with path and options (e.g. create a switch statement for the methods used)
   return Promise.resolve([{ name: "bmw", key: "bmw" }])
+})
+
+jest.spyOn(ApiClient, "get").mockImplementation((path, options) => {
+  // do something with path and options (e.g. create a switch statement for the methods used)
+  return Promise.reject(
+    new ResponseError({ status: 422, statusText: "" }, "Some data from the response body")
+  )
 })
 
 // or using mock
