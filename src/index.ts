@@ -80,9 +80,9 @@ class ApiClient {
   }
 
   private static async returnData(response: Response) {
-    const data = await response.json()
+    const data = await response.text()
     return response.ok
-      ? data
+      ? Promise.resolve(data ? JSON.parse(data) : null)
       : Promise.reject(new ResponseError(response, data))
   }
 
@@ -144,4 +144,5 @@ class ApiClient {
   }
 }
 
+export { ResponseError }
 export default ApiClient.getInstance()

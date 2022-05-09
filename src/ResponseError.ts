@@ -3,9 +3,9 @@ export default class ResponseError extends Error {
 
   statusText: string
 
-  data: any
+  data?: any
 
-  constructor(response: Response, data: any) {
+  constructor(response: Response, data?: any) {
     super()
     this.status = response.status
     this.statusText = response.statusText

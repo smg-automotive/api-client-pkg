@@ -7,8 +7,8 @@ const mockResolvedOnce = (value: any) => {
   fetchMock.mockReturnValueOnce(
     Promise.resolve({
       ok: true,
-      json: () => {
-        return Promise.resolve(value)
+      text: () => {
+        return Promise.resolve(JSON.stringify(value))
       },
     }),
   )

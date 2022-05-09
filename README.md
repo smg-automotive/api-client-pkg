@@ -60,6 +60,47 @@ automatically set the header with a Bearer token.
 
 ### Error handling
 
+The promise is rejected if any error occurs on API level. You can use promise chaining or `try/catch` to add any error
+handling.
+
+````typescript
+ApiClient.post<LeasingCalculation, LeasingData>(
+  "listings/calculate-leasing",
+  {
+    downPayment: shouldWork ? 7300 : 17500,
+    duration: 48,
+    estimatedKmPerYear: shouldWork ? 10000 : 30000,
+    firstRegistrationDate: "2020-07-01",
+    residualValue: 12045,
+    price: 36500,
+  }
+)
+  .then((res) => {
+    // res is typed to LeasingCalculation
+  })
+  .catch((error: ResponseError) => {
+    // do any error handling you want
+  })
+
+
+try {
+  const res = await ApiClient.post<LeasingCalculation, LeasingData>(
+    "listings/calculate-leasing",
+    {
+      downPayment: shouldWork ? 7300 : 17500,
+      duration: 48,
+      estimatedKmPerYear: shouldWork ? 10000 : 30000,
+      firstRegistrationDate: "2020-07-01",
+      residualValue: 12045,
+      price: 36500,
+    }
+  )
+  // res is typed to LeasingCalculation
+} catch (error: ResponseError) {
+  // do any error handling you want
+}
+````
+
 ### Testing
 
 ## Development
