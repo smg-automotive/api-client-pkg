@@ -1,9 +1,36 @@
-import fetchMock from 'jest-fetch-mock'
 import ApiClient from '../index'
+
+const fetchMock = jest.fn()
+global.fetch = fetchMock
+
+const mockResolvedOnce = (value: any) => {
+  fetchMock.mockReturnValueOnce(
+    Promise.resolve({
+      ok: true,
+      json: () => {
+        return Promise.resolve(value)
+      },
+    }),
+  )
+}
+
+const mockFetchFail = () => {
+  fetchMock.mockReturnValueOnce(Promise.reject(new Error()))
+}
+
+const mockApiFail = () => {
+  fetchMock.mockReturnValueOnce(
+    Promise.resolve({
+      ok: false,
+      statusText: 'Wrong data format',
+      status: 400,
+    }),
+  )
+}
 
 describe('ApiClient', () => {
   beforeEach(() => {
-    fetchMock.resetMocks()
+    fetchMock.mockReset()
   })
 
   it('throws if there is no baseUrl', () => {
@@ -14,11 +41,18 @@ describe('ApiClient', () => {
     )
   })
 
+  it('throws if fetch fails', async () => {
+    mockFetchFail()
+    await expect(
+      ApiClient.get<string>('/listings/search', { baseUrl: 'url' }),
+    ).rejects.toThrow()
+  })
+
   it('overwrites the configured baseUrl', async () => {
     ApiClient.configure({
       baseUrl: 'https://api.automotive.ch/api',
     })
-    fetchMock.mockResponseOnce(JSON.stringify({ data: '12345' }))
+    mockResolvedOnce({ data: '12345' })
     await ApiClient.get<{ data: string }>('/listings/search', {
       baseUrl: 'https://petstoreapi.ch',
     })
@@ -29,7 +63,7 @@ describe('ApiClient', () => {
   })
 
   it('allows to configure a custom header', async () => {
-    fetchMock.mockResponseOnce(JSON.stringify({ data: '12345' }))
+    mockResolvedOnce({ data: '12345' })
     await ApiClient.get<{ data: string }>('/listings/search', {
       baseUrl: 'https://petstoreapi.ch',
       headers: { 'Content-Type': 'text/xml', 'Accept-Language': 'fr-CH' },
@@ -43,7 +77,7 @@ describe('ApiClient', () => {
   })
 
   it('creates an authorization header if access token is passed', async () => {
-    fetchMock.mockResponseOnce(JSON.stringify({ data: '12345' }))
+    mockResolvedOnce({ data: '12345' })
     await ApiClient.get<{ data: string }>('/listings/search', {
       baseUrl: 'https://petstoreapi.ch',
       accessToken: 'abcdef',
@@ -64,7 +98,7 @@ describe('ApiClient', () => {
     })
 
     it('calls fetch with GET', async () => {
-      fetchMock.mockResponseOnce(JSON.stringify({ data: '12345' }))
+      mockResolvedOnce({ data: '12345' })
       await ApiClient.get<{ data: string }>('/listings/search')
       expect(fetch).toHaveBeenCalledWith(
         'https://api.automotive.ch/api/listings/search',
@@ -73,14 +107,16 @@ describe('ApiClient', () => {
     })
 
     it('extracts the json value of the response', async () => {
-      fetchMock.mockResponseOnce(JSON.stringify({ data: '12345' }))
+      mockResolvedOnce({ data: '12345' })
       const data = await ApiClient.get<{ data: string }>('/listings/search')
       expect(data.data).toEqual('12345')
     })
 
-    it('throws if fetch fails', async () => {
-      fetchMock.mockReject(new Error())
-      await expect(ApiClient.get<string>('/listings/search')).rejects.toThrow()
+    it('rejects if the request was not ok', async () => {
+      mockApiFail()
+      await expect(ApiClient.get<string>('/listings/create')).rejects.toEqual(
+        expect.any(Object),
+      )
     })
 
     it('throws if no parameters are passed', () => {
@@ -106,7 +142,7 @@ describe('ApiClient', () => {
     })
 
     it('replaces all occurrences if the parameters are named the same', async () => {
-      fetchMock.mockResponseOnce(JSON.stringify({ data: '12345' }))
+      mockResolvedOnce({ data: '12345' })
       await ApiClient.get<string>('dealers/{dealerId}/listings/{dealerId}', {
         params: { dealerId: 123 },
       })
@@ -117,7 +153,7 @@ describe('ApiClient', () => {
     })
 
     it('replaces the parameter placeholders with the data', async () => {
-      fetchMock.mockResponseOnce(JSON.stringify({ data: '12345' }))
+      mockResolvedOnce({ data: '12345' })
       await ApiClient.get<string>('dealers/{dealerId}/listings/{listingId}', {
         params: { dealerId: 123, listingId: 456 },
       })
@@ -136,7 +172,7 @@ describe('ApiClient', () => {
     })
 
     it('calls fetch with POST', async () => {
-      fetchMock.mockResponseOnce(JSON.stringify({ id: '12345' }))
+      mockResolvedOnce({ id: '12345' })
       await ApiClient.post<{ id: string }, { make: string }>(
         '/listings/create',
         { make: 'bmw' },
@@ -148,7 +184,7 @@ describe('ApiClient', () => {
     })
 
     it('extracts the json value of the response', async () => {
-      fetchMock.mockResponseOnce(JSON.stringify({ id: '12345' }))
+      mockResolvedOnce({ id: '12345' })
       const data = await ApiClient.post<{ id: string }, { make: string }>(
         '/listings/create',
         { make: 'bmw' },
@@ -156,11 +192,11 @@ describe('ApiClient', () => {
       expect(data.id).toEqual('12345')
     })
 
-    it('throws if fetch fails', async () => {
-      fetchMock.mockReject(new Error())
+    it('rejects if the request was not ok', async () => {
+      mockApiFail()
       await expect(
         ApiClient.post<string, string>('/listings/create', 'data'),
-      ).rejects.toThrow()
+      ).rejects.toEqual(expect.any(Object))
     })
 
     it('throws if no parameters are passed', () => {
@@ -188,7 +224,7 @@ describe('ApiClient', () => {
     })
 
     it('replaces the parameter placeholders with the data', async () => {
-      fetchMock.mockResponseOnce(JSON.stringify({ data: '12345' }))
+      mockResolvedOnce({ data: '12345' })
       await ApiClient.post<{ id: string }, { make: string }>(
         'dealers/{dealerId}/listings/{listingId}',
         { make: 'bmw' },
@@ -211,7 +247,7 @@ describe('ApiClient', () => {
     })
 
     it('calls fetch with PUT', async () => {
-      fetchMock.mockResponseOnce(JSON.stringify({ id: '12345' }))
+      mockResolvedOnce({ id: '12345' })
       await ApiClient.put<string, { make: string }>('/listings/update', {
         make: 'bmw',
       })
@@ -222,7 +258,7 @@ describe('ApiClient', () => {
     })
 
     it('extracts the json value of the response', async () => {
-      fetchMock.mockResponseOnce(JSON.stringify({ id: '12345' }))
+      mockResolvedOnce({ id: '12345' })
       const data = await ApiClient.put<{ id: string }, { make: string }>(
         '/listings/update',
         { make: 'bmw' },
@@ -230,11 +266,11 @@ describe('ApiClient', () => {
       expect(data.id).toEqual('12345')
     })
 
-    it('throws if fetch fails', async () => {
-      fetchMock.mockReject(new Error())
+    it('rejects if the request was not ok', async () => {
+      mockApiFail()
       await expect(
         ApiClient.put<string, string>('/listings/update', 'data'),
-      ).rejects.toThrow()
+      ).rejects.toEqual(expect.any(Object))
     })
 
     it('throws if no parameters are passed', () => {
@@ -262,7 +298,7 @@ describe('ApiClient', () => {
     })
 
     it('replaces the parameter placeholders with the data', async () => {
-      fetchMock.mockResponseOnce(JSON.stringify({ data: '12345' }))
+      mockResolvedOnce({ data: '12345' })
       await ApiClient.put<{ id: string }, { make: string }>(
         'dealers/{dealerId}/listings/{listingId}',
         { make: 'bmw' },
@@ -285,7 +321,7 @@ describe('ApiClient', () => {
     })
 
     it('calls fetch with DELETE', async () => {
-      fetchMock.mockResponseOnce(JSON.stringify({ data: '12345' }))
+      mockResolvedOnce({ data: '12345' })
       await ApiClient.delete('/listings/{listingId}', {
         params: { listingId: 123 },
       })
@@ -295,13 +331,13 @@ describe('ApiClient', () => {
       )
     })
 
-    it('throws if fetch fails', async () => {
-      fetchMock.mockReject(new Error())
+    it('rejects if the request was not ok', async () => {
+      mockApiFail()
       await expect(
         ApiClient.delete('/listings/{listingId}', {
           params: { listingId: 123 },
         }),
-      ).rejects.toThrow()
+      ).rejects.toEqual(expect.any(Object))
     })
 
     it('throws if no parameters are passed', () => {
@@ -321,7 +357,7 @@ describe('ApiClient', () => {
     })
 
     it('replaces the parameter placeholders with the data', async () => {
-      fetchMock.mockResponseOnce(JSON.stringify({}))
+      mockResolvedOnce({})
       await ApiClient.delete('dealers/{dealerId}/listings/{listingId}', {
         params: { dealerId: 123, listingId: 456 },
       })
