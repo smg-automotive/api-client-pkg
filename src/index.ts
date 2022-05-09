@@ -1,3 +1,5 @@
+import ResponseError from './ResponseError'
+
 export interface ApiClientConfiguration {
   baseUrl: string
   headers: Record<string, string>
@@ -77,6 +79,13 @@ class ApiClient {
     }
   }
 
+  private static async returnData(response: Response) {
+    const data = await response.json()
+    return response.ok
+      ? data
+      : Promise.reject(new ResponseError(response, data))
+  }
+
   configure = (configuration: Partial<ApiClientConfiguration>) => {
     this.configuration = {
       ...this.configuration,
@@ -92,7 +101,7 @@ class ApiClient {
       method: 'GET',
       headers: this.getHeaders(options),
     }).then((response) => {
-      return response.ok ? response.json() : Promise.reject(response)
+      return ApiClient.returnData(response)
     })
   }
 
@@ -106,7 +115,8 @@ class ApiClient {
       headers: this.getHeaders(options),
       body: JSON.stringify(body),
     }).then((response) => {
-      return response.ok ? response.json() : Promise.reject(response)
+      // TODO: JSON parse needed?
+      return ApiClient.returnData(response)
     })
   }
 
@@ -120,7 +130,7 @@ class ApiClient {
       headers: this.getHeaders(options),
       body: JSON.stringify(body),
     }).then((response) => {
-      return response.ok ? response.json() : Promise.reject(response)
+      return ApiClient.returnData(response)
     })
   }
 
@@ -129,7 +139,7 @@ class ApiClient {
       method: 'DELETE',
       headers: this.getHeaders(options),
     }).then((response) => {
-      return response.ok ? response.json() : Promise.reject(response)
+      return ApiClient.returnData(response)
     })
   }
 }
