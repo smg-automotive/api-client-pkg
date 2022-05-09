@@ -55,8 +55,22 @@ await ApiClient.get < string > ('dealers/{dealerId}/listings/{listingId}', {
 
 ### Authorization
 
-You can pass in `accessToken` to the request options if you are talking to a protected API. The client will
-automatically set the header with a Bearer token.
+You can pass `accessToken` to the request options if you are talking to a protected API. The client will automatically
+set the header with a Bearer token.
+
+````typescript
+ApiClient.post<{ id: number }, { name: string; listingIds: number[] }>(
+  "users/me/listing-comparisons",
+  { name: "test1", listingIds: [890163] },
+  { accessToken: authHeader.accessToken }
+)
+  .then((res) => {
+    // do something with the response
+  })
+  .catch((error) => {
+    // do something in case of an error
+  })
+````
 
 ### Error handling
 
