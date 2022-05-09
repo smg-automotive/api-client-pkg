@@ -1,12 +1,6 @@
-- [ ] provide usage examples in the `README.md`
-- [ ] enable the project on circleci.com to build and test your package
-- [ ] change the circleci status badge in this `README` to the new project
-- [ ] develop an awesome package
-- [ ] live long and prosper
-
 # api-client-pkg
 
-[![CircleCI](https://circleci.com/gh/smg-automotive/example-pkg/tree/main.svg?style=svg&circle-token=c183f151fea3c74453cf8dd962d31e115906a300)](https://circleci.com/gh/smg-automotive/example-pkg/tree/main)
+[![CircleCI](https://circleci.com/gh/smg-automotive/api-client-pkg/tree/main.svg?style=svg&circle-token=c183f151fea3c74453cf8dd962d31e115906a300)](https://circleci.com/gh/smg-automotive/example-pkg/tree/main)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
 ## Usage
@@ -41,10 +35,10 @@ interface Car {
 }
 
 // data has type Car
-const data = await ApiClient.get<Car>('/listings/search')
+var data = await ApiClient.get<Car>('/listings/search')
 
 // data has type { id: string } and body is typed as Car
-const data = await ApiClient.post<{ id: string }, Car>('/listings/create',
+var data = await ApiClient.post<{ id: string }, Car>('/listings/create',
   { make: 'bmw', horsepower: 300 },)
 ````
 
