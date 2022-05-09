@@ -121,6 +121,36 @@ try {
 
 ### Testing
 
+Create a file in the `__mocks__` directory called `@smg-automotive/api-client-pkg.ts` with the following content:
+
+````typescript
+export const ApiClient = {
+  get: jest.fn().mockReturnValue(Promise.resolve()),
+  post: jest.fn().mockReturnValue(Promise.resolve()),
+  put: jest.fn().mockReturnValue(Promise.resolve()),
+  delete: jest.fn().mockReturnValue(Promise.resolve()),
+}
+````
+
+By default, all the API calls will succeed. If you want to reject it or return a specific value you can do this as
+follows:
+
+````typescript
+jest.spyOn(ApiClient, "get").mockImplementation((path, options) => {
+  // do something with path and options (e.g. create a switch statement for the methods used)
+  return Promise.resolve([{ name: "bmw", key: "bmw" }])
+})
+
+// or using mock
+jest.mock("@smg-automotive/api-client-pkg", () => ({
+  ApiClient: {
+    get: jest
+      .fn()
+      .mockImplementation(() => Promise.resolve([{ name: "bmw", key: "bmw" }])),
+  },
+}))
+````
+
 ## Development
 
 ```
