@@ -105,8 +105,8 @@ class ApiClient {
       method: 'POST',
       headers: this.getHeaders(options),
       body: JSON.stringify(body),
-    }).then((res) => {
-      return res.json()
+    }).then((response) => {
+      return response.ok ? response.json() : Promise.reject(response)
     })
   }
 
@@ -119,8 +119,8 @@ class ApiClient {
       method: 'PUT',
       headers: this.getHeaders(options),
       body: JSON.stringify(body),
-    }).then((res) => {
-      return res.json()
+    }).then((response) => {
+      return response.ok ? response.json() : Promise.reject(response)
     })
   }
 
@@ -128,8 +128,8 @@ class ApiClient {
     return fetch(this.getPath(path, options), {
       method: 'DELETE',
       headers: this.getHeaders(options),
-    }).then((res) => {
-      return res.json()
+    }).then((response) => {
+      return response.ok ? response.json() : Promise.reject(response)
     })
   }
 }
