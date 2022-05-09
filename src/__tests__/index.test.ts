@@ -9,7 +9,9 @@ describe('ApiClient', () => {
   it('throws if there is no baseUrl', () => {
     expect(() => {
       ApiClient.get<{ data: string }>('/listings/search')
-    }).toThrow('ApiClient is not configured. Please run ApiClient.configure()')
+    }).toThrow(
+      'ApiClient is not configured. Please run ApiClient.configure() or pass a custom baseUrl.',
+    )
   })
 
   it('overwrites the configured baseUrl', async () => {
@@ -23,6 +25,34 @@ describe('ApiClient', () => {
     expect(fetch).toHaveBeenCalledWith(
       'https://petstoreapi.ch/listings/search',
       expect.any(Object),
+    )
+  })
+
+  it('allows to configure a custom header', async () => {
+    fetchMock.mockResponseOnce(JSON.stringify({ data: '12345' }))
+    await ApiClient.get<{ data: string }>('/listings/search', {
+      baseUrl: 'https://petstoreapi.ch',
+      headers: { 'Content-Type': 'text/xml', 'Accept-Language': 'fr-CH' },
+    })
+    expect(fetch).toHaveBeenCalledWith(
+      'https://petstoreapi.ch/listings/search',
+      expect.objectContaining({
+        headers: { 'Content-Type': 'text/xml', 'Accept-Language': 'fr-CH' },
+      }),
+    )
+  })
+
+  it('creates an authorization header if access token is passed', async () => {
+    fetchMock.mockResponseOnce(JSON.stringify({ data: '12345' }))
+    await ApiClient.get<{ data: string }>('/listings/search', {
+      baseUrl: 'https://petstoreapi.ch',
+      accessToken: 'abcdef',
+    })
+    expect(fetch).toHaveBeenCalledWith(
+      'https://petstoreapi.ch/listings/search',
+      expect.objectContaining({
+        headers: expect.objectContaining({ Authorization: 'Bearer abcdef' }),
+      }),
     )
   })
 

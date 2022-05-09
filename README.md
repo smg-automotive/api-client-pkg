@@ -30,7 +30,7 @@ ApiClient.configure({
 
 The ApiClient provides promise-based methods for `GET`, `POST`, `PUT` and `DELETE`.
 
-#### Typing
+### Typing
 
 You can define the request and the response type of your method as follows:
 
@@ -44,7 +44,7 @@ interface Car {
 const data = await ApiClient.get<Car>('/listings/search')
 ````
 
-#### Parameters
+### Parameters
 
 If your request URL contains parameters, you can use curly brackets and the ApiClient replaces it with the passed data.
 
@@ -54,6 +54,15 @@ await ApiClient.get < string > ('dealers/{dealerId}/listings/{listingId}', {
   params: { dealerId: 123, listingId: 456 },
 })
 ````
+
+### Authorization
+
+You can pass in `accessToken` to the request options if you are talking to a protected API. The client will
+automatically set the header with a Bearer token.
+
+### Error handling
+
+### Testing
 
 ## Development
 

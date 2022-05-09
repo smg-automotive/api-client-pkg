@@ -7,6 +7,7 @@ export interface RequestOptions {
   baseUrl?: string
   headers?: Record<string, string>
   params?: Record<string, string | number>
+  accessToken?: string
 }
 
 class ApiClient {
@@ -57,13 +58,23 @@ class ApiClient {
     const baseUrl = options?.baseUrl || this.configuration.baseUrl
     if (!baseUrl) {
       throw new Error(
-        'ApiClient is not configured. Please run ApiClient.configure()',
+        'ApiClient is not configured. Please run ApiClient.configure() or pass a custom baseUrl.',
       )
     }
 
     return `${baseUrl}${
       path.startsWith('/') ? '' : '/'
     }${ApiClient.replaceParameters(path, options)}`
+  }
+
+  private getHeaders(options?: RequestOptions): Record<string, string> {
+    return {
+      ...this.configuration.headers,
+      ...options?.headers,
+      ...(options?.accessToken
+        ? { Authorization: `Bearer ${options.accessToken}` }
+        : {}),
+    }
   }
 
   configure = (configuration: Partial<ApiClientConfiguration>) => {
@@ -79,6 +90,7 @@ class ApiClient {
   ): Promise<ResponseType> => {
     return fetch(this.getPath(path, options), {
       method: 'GET',
+      headers: this.getHeaders(options),
     }).then((response) => {
       return response.ok ? response.json() : Promise.reject(response)
     })
@@ -91,6 +103,7 @@ class ApiClient {
   ): Promise<ResponseType> => {
     return fetch(this.getPath(path, options), {
       method: 'POST',
+      headers: this.getHeaders(options),
       body: JSON.stringify(body),
     }).then((res) => {
       return res.json()
@@ -104,6 +117,7 @@ class ApiClient {
   ): Promise<ResponseType> => {
     return fetch(this.getPath(path, options), {
       method: 'PUT',
+      headers: this.getHeaders(options),
       body: JSON.stringify(body),
     }).then((res) => {
       return res.json()
@@ -113,6 +127,7 @@ class ApiClient {
   delete = (path: string, options?: RequestOptions): Promise<void> => {
     return fetch(this.getPath(path, options), {
       method: 'DELETE',
+      headers: this.getHeaders(options),
     }).then((res) => {
       return res.json()
     })
