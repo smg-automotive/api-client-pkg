@@ -7,8 +7,13 @@ const mockResolvedOnce = (value: any) => {
   fetchMock.mockReturnValueOnce(
     Promise.resolve({
       ok: true,
-      text: () => {
-        return Promise.resolve(JSON.stringify(value))
+      json: () => {
+        return Promise.resolve(value)
+      },
+      headers: {
+        get: () => {
+          return 200
+        },
       },
     }),
   )
@@ -62,6 +67,17 @@ describe('ApiClient', () => {
     )
   })
 
+  it('removes duplicated slashes', async () => {
+    mockResolvedOnce({ data: '12345' })
+    await ApiClient.get<{ data: string }>('/listings/search', {
+      baseUrl: 'https://petstoreapi.ch/',
+    })
+    expect(fetch).toHaveBeenCalledWith(
+      'https://petstoreapi.ch/listings/search',
+      expect.any(Object),
+    )
+  })
+
   it('allows to configure a custom header', async () => {
     mockResolvedOnce({ data: '12345' })
     await ApiClient.get<{ data: string }>('/listings/search', {
@@ -70,6 +86,25 @@ describe('ApiClient', () => {
     })
     expect(fetch).toHaveBeenCalledWith(
       'https://petstoreapi.ch/listings/search',
+      expect.objectContaining({
+        headers: { 'Content-Type': 'text/xml', 'Accept-Language': 'fr-CH' },
+      }),
+    )
+  })
+
+  it('merges the custom header with the configuration', async () => {
+    mockResolvedOnce({ data: '12345' })
+    ApiClient.configure({
+      baseUrl: 'https://api.automotive.ch/api',
+      headers: {
+        'Accept-Language': 'fr-CH',
+      },
+    })
+    await ApiClient.get<{ data: string }>('/listings/search', {
+      headers: { 'Content-Type': 'text/xml' },
+    })
+    expect(fetch).toHaveBeenCalledWith(
+      'https://api.automotive.ch/api/listings/search',
       expect.objectContaining({
         headers: { 'Content-Type': 'text/xml', 'Accept-Language': 'fr-CH' },
       }),

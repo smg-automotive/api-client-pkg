@@ -51,7 +51,7 @@ class ApiClient {
         )
       }
 
-      replacedPath = replacedPath.replace(param, String(value))
+      replacedPath = replacedPath.replace(param, `${value}`)
     })
     return replacedPath
   }
@@ -63,10 +63,11 @@ class ApiClient {
         'ApiClient is not configured. Please run ApiClient.configure() or pass a custom baseUrl.',
       )
     }
-
-    return `${baseUrl}${
-      path.startsWith('/') ? '' : '/'
-    }${ApiClient.replaceParameters(path, options)}`
+    const fetchPath = ApiClient.replaceParameters(path, options)
+    return [
+      baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl,
+      fetchPath.startsWith('/') ? fetchPath.slice(1) : fetchPath,
+    ].join('/')
   }
 
   private getHeaders(options?: RequestOptions): Record<string, string> {
@@ -80,9 +81,10 @@ class ApiClient {
   }
 
   private static async returnData(response: Response) {
-    const data = await response.text()
+    const size = Number(response.headers.get('content-length') || 0)
+    const data = size > 0 ? await response.json() : null
     return response.ok
-      ? Promise.resolve(data ? JSON.parse(data) : null)
+      ? Promise.resolve(data)
       : Promise.reject(new ResponseError(response, data))
   }
 
@@ -115,7 +117,6 @@ class ApiClient {
       headers: this.getHeaders(options),
       body: JSON.stringify(body),
     }).then((response) => {
-      // TODO: JSON parse needed?
       return ApiClient.returnData(response)
     })
   }
