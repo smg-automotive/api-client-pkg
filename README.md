@@ -9,7 +9,7 @@
 npm install @smg-automotive/api-client-pkg
 ```
 
-````javascript
+````typescript
 import { ApiClient } from "@smg-automotive/api-client-pkg"
 ````
 
@@ -17,7 +17,7 @@ import { ApiClient } from "@smg-automotive/api-client-pkg"
 
 The available instance methods are listed below. The specified config will be merged with the instance config.
 
-````javascript
+````typescript
 ApiClient.configure({
   baseUrl: 'https://api.automotive.ch/api',
   headers: { 'Content-Type': 'application/json' },
@@ -49,11 +49,12 @@ var data = await ApiClient.post<{ id: string }, Car>('/listings/create',
 ### Parameters
 
 If your request URL contains parameters, you can use curly brackets and the ApiClient replaces it with the passed data.
-This is aligned with the OpenAPI specification used by Swagger hence you can easily search for occurrences.
+This is aligned with the OpenAPI specification used by Swagger. Hence, you can easily search for occurrences of your
+APIs.
 
-````javascript
-// fetch is called with baseUrl/dealers/123/listings/456
-await ApiClient.get < string > ('dealers/{dealerId}/listings/{listingId}', {
+````typescript
+// fetch is called with https://baseUrl.api.ch/dealers/123/listings/456
+await ApiClient.get('dealers/{dealerId}/listings/{listingId}', {
   params: { dealerId: 123, listingId: 456 },
 })
 ````
@@ -64,6 +65,7 @@ You can pass `accessToken` to the request options if you are talking to a protec
 set the header with a Bearer token.
 
 ````typescript
+// fetch is called with the header { Authorization: `Bearer ${accessToken}` }
 ApiClient.post<{ id: number }, { name: string; listingIds: number[] }>(
   "users/me/listing-comparisons",
   { name: "test1", listingIds: [890163] },
@@ -79,7 +81,7 @@ ApiClient.post<{ id: number }, { name: string; listingIds: number[] }>(
 
 ### Error handling
 
-The promise is rejected if any error occurs on API level. You can use promise chaining or `try/catch` to add any error
+The promise is rejected if any error occurs on API level. You can use promise chaining or `try/catch` to add error
 handling.
 
 ````typescript
@@ -103,6 +105,7 @@ ApiClient.post<LeasingCalculation, LeasingData>(
 
 
 try {
+  // res has the type LeasingCalculation
   const res = await ApiClient.post<LeasingCalculation, LeasingData>(
     "listings/calculate-leasing",
     {
@@ -114,7 +117,6 @@ try {
       price: 36500,
     }
   )
-  // res is typed to LeasingCalculation
 } catch (error: ResponseError) {
   // do any error handling you want
 }
