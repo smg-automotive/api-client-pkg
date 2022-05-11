@@ -115,7 +115,7 @@ class ApiClient {
     return fetch(this.getPath(path, options), {
       method: 'POST',
       headers: this.getHeaders(options),
-      body: JSON.stringify(body),
+      body: body && JSON.stringify(body),
     }).then((response) => {
       return ApiClient.returnData(response)
     })
@@ -129,7 +129,7 @@ class ApiClient {
     return fetch(this.getPath(path, options), {
       method: 'PUT',
       headers: this.getHeaders(options),
-      body: JSON.stringify(body),
+      body: body && JSON.stringify(body),
     }).then((response) => {
       return ApiClient.returnData(response)
     })

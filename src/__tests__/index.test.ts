@@ -272,6 +272,21 @@ describe('ApiClient', () => {
         expect.any(Object),
       )
     })
+
+    it('calls fetch with an empty body', async () => {
+      mockResolvedOnce(null)
+      await ApiClient.post<{ id: string }, null>(
+        'dealers/{dealerId}/listings/{listingId}',
+        null,
+        {
+          params: { dealerId: 123, listingId: 456 },
+        },
+      )
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('dealers/123/listings/456'),
+        expect.objectContaining({ body: null }),
+      )
+    })
   })
 
   describe('put', () => {
