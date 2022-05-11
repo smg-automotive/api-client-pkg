@@ -13,23 +13,9 @@ export interface RequestOptions {
 }
 
 class ApiClient {
-  // eslint-disable-next-line no-use-before-define
-  private static instance: ApiClient
-
-  private configuration: ApiClientConfiguration
-
-  private constructor() {
-    this.configuration = {
-      baseUrl: '',
-      headers: { 'Content-Type': 'application/json' },
-    }
-  }
-
-  public static getInstance(): ApiClient {
-    if (!ApiClient.instance) {
-      ApiClient.instance = new ApiClient()
-    }
-    return ApiClient.instance
+  private configuration: ApiClientConfiguration = {
+    baseUrl: '',
+    headers: { 'Content-Type': 'application/json' },
   }
 
   private static replaceParameters(path: string, options?: RequestOptions) {
@@ -83,9 +69,10 @@ class ApiClient {
   private static async returnData(response: Response) {
     const size = Number(response.headers.get('content-length') || 0)
     const data = size > 0 ? await response.json() : null
-    return response.ok
-      ? Promise.resolve(data)
-      : Promise.reject(new ResponseError(response, data))
+    if (!response.ok) {
+      throw new ResponseError(response, data)
+    }
+    return data
   }
 
   configure = (configuration: Partial<ApiClientConfiguration>) => {
@@ -145,6 +132,6 @@ class ApiClient {
   }
 }
 
-const apiClient = ApiClient.getInstance()
+const apiClient = new ApiClient()
 
 export { ResponseError, apiClient as ApiClient }
