@@ -10,8 +10,11 @@ describe('delete', () => {
 
   it('calls fetch with DELETE', async () => {
     mockResolvedOnce({ data: '12345' })
-    await ApiClient.delete('/listings/{listingId}', {
-      params: { listingId: 123 },
+    await ApiClient.delete({
+      path: '/listings/{listingId}',
+      params: {
+        listingId: 123,
+      },
     })
     expect(fetch).toHaveBeenCalledWith(
       expect.any(String),
@@ -22,22 +25,31 @@ describe('delete', () => {
   it('rejects if the request was not ok', async () => {
     mockApiFailOnce()
     await expect(
-      ApiClient.delete('/listings/{listingId}', {
-        params: { listingId: 123 },
+      ApiClient.delete({
+        path: '/listings/{listingId}',
+        params: {
+          listingId: 123,
+        },
       }),
     ).rejects.toEqual(expect.any(Object))
   })
 
   it('throws if no parameters are passed', async () => {
     await expect(async () => {
-      await ApiClient.delete('dealers/{dealerId}/listings/{listingId}', {})
+      await ApiClient.delete({
+        path: 'dealers/{dealerId}/listings/{listingId}',
+        options: {},
+      })
     }).rejects.toThrow()
   })
 
   it('throws if a parameter is missing', async () => {
     await expect(async () => {
-      await ApiClient.delete('dealers/{dealerId}/listings/{listingId}', {
-        params: { listingId: 456 },
+      await ApiClient.delete({
+        path: 'dealers/{dealerId}/listings/{listingId}',
+        params: {
+          listingId: 456,
+        },
       })
     }).rejects.toThrow(
       'Param {dealerId} missing. Expected parameters are: {dealerId}, {listingId}',
@@ -46,8 +58,12 @@ describe('delete', () => {
 
   it('replaces the parameter placeholders with the data', async () => {
     mockResolvedOnce({})
-    await ApiClient.delete('dealers/{dealerId}/listings/{listingId}', {
-      params: { dealerId: 123, listingId: 456 },
+    await ApiClient.delete({
+      path: 'dealers/{dealerId}/listings/{listingId}',
+      params: {
+        dealerId: 123,
+        listingId: 456,
+      },
     })
     expect(fetch).toHaveBeenCalledWith(
       expect.stringContaining('dealers/123/listings/456'),

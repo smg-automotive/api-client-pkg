@@ -5,10 +5,11 @@ export interface ApiClientConfiguration {
   headers: Record<string, string>
 }
 
+type RequestParameters = Record<string, string | number>
+
 export interface RequestOptions {
   baseUrl?: string
   headers?: Record<string, string>
-  params?: Record<string, string | number>
   accessToken?: string
 }
 
@@ -18,7 +19,13 @@ class ApiClient {
     headers: { 'Content-Type': 'application/json' },
   }
 
-  private static replaceParameters(path: string, options?: RequestOptions) {
+  private static replaceParameters({
+    path,
+    params,
+  }: {
+    path: string
+    params?: RequestParameters
+  }) {
     const parameters = path.match(/{(.*?)}/g) || []
 
     if (!parameters.length) {
@@ -27,7 +34,7 @@ class ApiClient {
 
     let replacedPath = path
     parameters.forEach((param) => {
-      const value = options?.params?.[param.slice(1, -1)]
+      const value = params?.[param.slice(1, -1)]
 
       if (!value) {
         throw new Error(
@@ -42,14 +49,22 @@ class ApiClient {
     return replacedPath
   }
 
-  private getPath(path: string, options?: RequestOptions) {
+  private getPath({
+    path,
+    params,
+    options,
+  }: {
+    path: string
+    params?: RequestParameters
+    options?: RequestOptions
+  }) {
     const baseUrl = options?.baseUrl || this.configuration.baseUrl
     if (!baseUrl) {
       throw new Error(
         'ApiClient is not configured. Please run ApiClient.configure() or pass a custom baseUrl.',
       )
     }
-    const fetchPath = ApiClient.replaceParameters(path, options)
+    const fetchPath = ApiClient.replaceParameters({ path, params })
     return [
       baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl,
       fetchPath.startsWith('/') ? fetchPath.slice(1) : fetchPath,
@@ -82,25 +97,36 @@ class ApiClient {
     }
   }
 
-  get = async <ResponseType>(
-    path: string,
-    options?: RequestOptions,
-  ): Promise<ResponseType> => {
+  get = async <ResponseType>({
+    path,
+    params,
+    options,
+  }: {
+    path: string
+    params?: RequestParameters
+    options?: RequestOptions
+  }): Promise<ResponseType> => {
     return ApiClient.returnData(
-      await fetch(this.getPath(path, options), {
+      await fetch(this.getPath({ path, params, options }), {
         method: 'GET',
         headers: this.getHeaders(options),
       }),
     )
   }
 
-  post = async <ResponseType, RequestType>(
-    path: string,
-    body: RequestType,
-    options?: RequestOptions,
-  ): Promise<ResponseType> => {
+  post = async <ResponseType, RequestType>({
+    path,
+    params,
+    body,
+    options,
+  }: {
+    path: string
+    params?: RequestParameters
+    body: RequestType
+    options?: RequestOptions
+  }): Promise<ResponseType> => {
     return ApiClient.returnData(
-      await fetch(this.getPath(path, options), {
+      await fetch(this.getPath({ path, params, options }), {
         method: 'POST',
         headers: this.getHeaders(options),
         body: body && JSON.stringify(body),
@@ -108,13 +134,19 @@ class ApiClient {
     )
   }
 
-  put = async <ResponseType, RequestType>(
-    path: string,
-    body: RequestType,
-    options?: RequestOptions,
-  ): Promise<ResponseType> => {
+  put = async <ResponseType, RequestType>({
+    path,
+    params,
+    body,
+    options,
+  }: {
+    path: string
+    params?: RequestParameters
+    body: RequestType
+    options?: RequestOptions
+  }): Promise<ResponseType> => {
     return ApiClient.returnData(
-      await fetch(this.getPath(path, options), {
+      await fetch(this.getPath({ path, params, options }), {
         method: 'PUT',
         headers: this.getHeaders(options),
         body: body && JSON.stringify(body),
@@ -122,9 +154,17 @@ class ApiClient {
     )
   }
 
-  delete = async (path: string, options?: RequestOptions): Promise<void> => {
+  delete = async ({
+    path,
+    params,
+    options,
+  }: {
+    path: string
+    params?: RequestParameters
+    options?: RequestOptions
+  }): Promise<void> => {
     return ApiClient.returnData(
-      await fetch(this.getPath(path, options), {
+      await fetch(this.getPath({ path, params, options }), {
         method: 'DELETE',
         headers: this.getHeaders(options),
       }),

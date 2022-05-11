@@ -10,7 +10,7 @@ describe('get', () => {
 
   it('calls fetch with GET', async () => {
     mockResolvedOnce({ data: '12345' })
-    await ApiClient.get<{ data: string }>('/listings/search')
+    await ApiClient.get<{ data: string }>({ path: '/listings/search' })
     expect(fetch).toHaveBeenCalledWith(
       'https://api.automotive.ch/api/listings/search',
       expect.objectContaining({ method: 'GET' }),
@@ -19,34 +19,36 @@ describe('get', () => {
 
   it('extracts the json value of the response', async () => {
     mockResolvedOnce({ data: '12345' })
-    const data = await ApiClient.get<{ data: string }>('/listings/search')
+    const data = await ApiClient.get<{ data: string }>({
+      path: '/listings/search',
+    })
     expect(data.data).toEqual('12345')
   })
 
   it('rejects if the request was not ok', async () => {
     mockApiFailOnce()
-    await expect(ApiClient.get<string>('/listings/create')).rejects.toEqual(
-      expect.any(Object),
-    )
+    await expect(
+      ApiClient.get<string>({ path: '/listings/create' }),
+    ).rejects.toEqual(expect.any(Object))
   })
 
   it('throws if no parameters are passed', async () => {
     await expect(async () => {
-      await ApiClient.get<{ data: string }>(
-        'dealers/{dealerId}/listings/{listingId}',
-        {},
-      )
+      await ApiClient.get<{ data: string }>({
+        path: 'dealers/{dealerId}/listings/{listingId}',
+        options: {},
+      })
     }).rejects.toThrow()
   })
 
   it('throws if a parameter is missing', async () => {
     await expect(async () => {
-      await ApiClient.get<{ data: string }>(
-        'dealers/{dealerId}/listings/{listingId}',
-        {
-          params: { listingId: 456 },
+      await ApiClient.get<{ data: string }>({
+        path: 'dealers/{dealerId}/listings/{listingId}',
+        params: {
+          listingId: 456,
         },
-      )
+      })
     }).rejects.toThrow(
       'Param {dealerId} missing. Expected parameters are: {dealerId}, {listingId}',
     )
@@ -54,8 +56,11 @@ describe('get', () => {
 
   it('replaces all occurrences if the parameters are named the same', async () => {
     mockResolvedOnce({ data: '12345' })
-    await ApiClient.get<string>('dealers/{dealerId}/listings/{dealerId}', {
-      params: { dealerId: 123 },
+    await ApiClient.get<string>({
+      path: 'dealers/{dealerId}/listings/{dealerId}',
+      params: {
+        dealerId: 123,
+      },
     })
     expect(fetch).toHaveBeenCalledWith(
       expect.stringContaining('dealers/123/listings/123'),
@@ -65,8 +70,12 @@ describe('get', () => {
 
   it('replaces the parameter placeholders with the data', async () => {
     mockResolvedOnce({ data: '12345' })
-    await ApiClient.get<string>('dealers/{dealerId}/listings/{listingId}', {
-      params: { dealerId: 123, listingId: 456 },
+    await ApiClient.get<string>({
+      path: 'dealers/{dealerId}/listings/{listingId}',
+      params: {
+        dealerId: 123,
+        listingId: 456,
+      },
     })
     expect(fetch).toHaveBeenCalledWith(
       expect.stringContaining('dealers/123/listings/456'),
