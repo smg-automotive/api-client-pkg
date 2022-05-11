@@ -28,18 +28,18 @@ describe('delete', () => {
     ).rejects.toEqual(expect.any(Object))
   })
 
-  it('throws if no parameters are passed', () => {
-    expect(() => {
-      ApiClient.delete('dealers/{dealerId}/listings/{listingId}', {})
-    }).toThrow()
+  it('throws if no parameters are passed', async () => {
+    await expect(async () => {
+      await ApiClient.delete('dealers/{dealerId}/listings/{listingId}', {})
+    }).rejects.toThrow()
   })
 
   it('throws if a parameter is missing', async () => {
-    expect(() => {
-      ApiClient.delete('dealers/{dealerId}/listings/{listingId}', {
+    await expect(async () => {
+      await ApiClient.delete('dealers/{dealerId}/listings/{listingId}', {
         params: { listingId: 456 },
       })
-    }).toThrow(
+    }).rejects.toThrow(
       'Param {dealerId} missing. Expected parameters are: {dealerId}, {listingId}',
     )
   })

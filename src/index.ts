@@ -82,53 +82,53 @@ class ApiClient {
     }
   }
 
-  get = <ResponseType>(
+  get = async <ResponseType>(
     path: string,
     options?: RequestOptions,
   ): Promise<ResponseType> => {
-    return fetch(this.getPath(path, options), {
-      method: 'GET',
-      headers: this.getHeaders(options),
-    }).then((response) => {
-      return ApiClient.returnData(response)
-    })
+    return ApiClient.returnData(
+      await fetch(this.getPath(path, options), {
+        method: 'GET',
+        headers: this.getHeaders(options),
+      }),
+    )
   }
 
-  post = <ResponseType, RequestType>(
-    path: string,
-    body: RequestType,
-    options?: RequestOptions,
-  ): Promise<ResponseType> => {
-    return fetch(this.getPath(path, options), {
-      method: 'POST',
-      headers: this.getHeaders(options),
-      body: body && JSON.stringify(body),
-    }).then((response) => {
-      return ApiClient.returnData(response)
-    })
-  }
-
-  put = <ResponseType, RequestType>(
+  post = async <ResponseType, RequestType>(
     path: string,
     body: RequestType,
     options?: RequestOptions,
   ): Promise<ResponseType> => {
-    return fetch(this.getPath(path, options), {
-      method: 'PUT',
-      headers: this.getHeaders(options),
-      body: body && JSON.stringify(body),
-    }).then((response) => {
-      return ApiClient.returnData(response)
-    })
+    return ApiClient.returnData(
+      await fetch(this.getPath(path, options), {
+        method: 'POST',
+        headers: this.getHeaders(options),
+        body: body && JSON.stringify(body),
+      }),
+    )
   }
 
-  delete = (path: string, options?: RequestOptions): Promise<void> => {
-    return fetch(this.getPath(path, options), {
-      method: 'DELETE',
-      headers: this.getHeaders(options),
-    }).then((response) => {
-      return ApiClient.returnData(response)
-    })
+  put = async <ResponseType, RequestType>(
+    path: string,
+    body: RequestType,
+    options?: RequestOptions,
+  ): Promise<ResponseType> => {
+    return ApiClient.returnData(
+      await fetch(this.getPath(path, options), {
+        method: 'PUT',
+        headers: this.getHeaders(options),
+        body: body && JSON.stringify(body),
+      }),
+    )
+  }
+
+  delete = async (path: string, options?: RequestOptions): Promise<void> => {
+    return ApiClient.returnData(
+      await fetch(this.getPath(path, options), {
+        method: 'DELETE',
+        headers: this.getHeaders(options),
+      }),
+    )
   }
 }
 

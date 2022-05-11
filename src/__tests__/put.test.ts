@@ -35,26 +35,26 @@ describe('put', () => {
     ).rejects.toEqual(expect.any(Object))
   })
 
-  it('throws if no parameters are passed', () => {
-    expect(() => {
-      ApiClient.put<{ id: string }, { make: string }>(
+  it('throws if no parameters are passed', async () => {
+    await expect(async () => {
+      await ApiClient.put<{ id: string }, { make: string }>(
         'dealers/{dealerId}/listings/{listingId}',
         { make: 'bmw' },
         {},
       )
-    }).toThrow()
+    }).rejects.toThrow()
   })
 
   it('throws if a parameter is missing', async () => {
-    expect(() => {
-      ApiClient.put<{ id: string }, { make: string }>(
+    await expect(async () => {
+      await ApiClient.put<{ id: string }, { make: string }>(
         'dealers/{dealerId}/listings/{listingId}',
         { make: 'bmw' },
         {
           params: { listingId: 456 },
         },
       )
-    }).toThrow(
+    }).rejects.toThrow(
       'Param {dealerId} missing. Expected parameters are: {dealerId}, {listingId}',
     )
   })

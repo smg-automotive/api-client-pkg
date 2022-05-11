@@ -2,10 +2,10 @@ import { ApiClient } from '../index'
 import { mockFetchFailOnce, mockResolvedOnce } from '../../.jest/helpers/fetch'
 
 describe('ApiClient', () => {
-  it('throws if there is no baseUrl', () => {
-    expect(() => {
-      ApiClient.get<{ data: string }>('/listings/search')
-    }).toThrow(
+  it('throws if there is no baseUrl', async () => {
+    await expect(async () => {
+      await ApiClient.get<{ data: string }>('/listings/search')
+    }).rejects.toThrow(
       'ApiClient is not configured. Please run ApiClient.configure() or pass a custom baseUrl.',
     )
   })
