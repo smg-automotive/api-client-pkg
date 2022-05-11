@@ -12,7 +12,7 @@ export default [
     output: [
       {
         file: 'dist/__mocks__/index.js',
-        format: 'esm',
+        format: 'cjs',
       },
     ],
     plugins: [typescript({ tsconfig: './tsconfig.build.json' })],
