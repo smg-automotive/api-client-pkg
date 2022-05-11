@@ -75,29 +75,10 @@ await ApiClient.post<{ id: number }, { name: string; listingIds: number[] }>(
 
 ### Error handling
 
-The promise is rejected if any error occurs on API level. You can use promise chaining or `try/catch` to add error
+The promise is rejected if any error occurs on API level. Use `try/catch` to add error
 handling.
 
 ````typescript
-ApiClient.post<LeasingCalculation, LeasingData>(
-  "listings/calculate-leasing",
-  {
-    downPayment: 7300,
-    duration: 48,
-    estimatedKmPerYear: 10000,
-    firstRegistrationDate: "2020-07-01",
-    residualValue: 12045,
-    price: 36500,
-  }
-)
-  .then((res) => {
-    // res is typed to LeasingCalculation
-  })
-  .catch((error: ResponseError) => {
-    // do any error handling you want
-  })
-
-
 try {
   // res has the type LeasingCalculation
   const res = await ApiClient.post<LeasingCalculation, LeasingData>(
