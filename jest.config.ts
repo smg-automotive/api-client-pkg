@@ -6,6 +6,5 @@ export default {
   preset: 'ts-jest/presets/js-with-ts',
   restoreMocks: true,
   roots: ['<rootDir>/src'],
-  setupFilesAfterEnv: ['<rootDir>/.jest/setup/jestDomExpects.ts'],
-  testEnvironment: 'jsdom',
+  setupFilesAfterEnv: ['<rootDir>/.jest/setup/fetchMock.ts'],
 }
