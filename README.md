@@ -44,11 +44,16 @@ interface Car {
 }
 
 // data has type Car
-var data = await ApiClient.get<Car>('/listings/search')
+var data = await ApiClient.get<Car>({ path: '/listings/search' })
 
 // data has type { id: string } and body is typed as Car
-var data = await ApiClient.post<{ id: string }, Car>('/listings/create',
-  { make: 'bmw', horsepower: 300 },)
+var data = await ApiClient.post<{ id: string }, Car>({
+  path: '/listings/create',
+  body: {
+    make: 'bmw',
+    horsepower: 300
+  }
+})
 ````
 
 ### Parameters
@@ -59,8 +64,12 @@ APIs.
 
 ````typescript
 // fetch is called with https://baseUrl.api.ch/dealers/123/listings/456
-await ApiClient.get('dealers/{dealerId}/listings/{listingId}', {
-  params: { dealerId: 123, listingId: 456 },
+await ApiClient.get({
+  path: 'dealers/{dealerId}/listings/{listingId}',
+  params: {
+    dealerId: 123,
+    listingId: 456
+  }
 })
 ````
 
@@ -71,11 +80,16 @@ set the header with a Bearer token.
 
 ````typescript
 // fetch is called with the header { Authorization: `Bearer ${accessToken}` }
-await ApiClient.post<{ id: number }, { name: string; listingIds: number[] }>(
-  "users/me/listing-comparisons",
-  { name: "test1", listingIds: [890163] },
-  { accessToken: authHeader.accessToken }
-)
+await ApiClient.post<{ id: number }, { name: string; listingIds: number[] }>({
+  path: "users/me/listing-comparisons",
+  body: {
+    name: "test1",
+    listingIds: [890163]
+  },
+  options: {
+    accessToken: authHeader.accessToken
+  }
+})
 ````
 
 ### Error handling
@@ -85,9 +99,9 @@ The promise is rejected if any error occurs on API level. Use `try/catch` to add
 ````typescript
 try {
   // res has the type LeasingCalculation
-  const res = await ApiClient.post<LeasingCalculation, LeasingData>(
-    "listings/calculate-leasing",
-    {
+  const res = await ApiClient.post<LeasingCalculation, LeasingData>({
+    path: "listings/calculate-leasing",
+    body: {
       downPayment: 7300,
       duration: 48,
       estimatedKmPerYear: 10000,
@@ -95,7 +109,7 @@ try {
       residualValue: 12045,
       price: 36500,
     }
-  )
+  })
 } catch (error) {
   // do any error handling you want
 }
@@ -106,13 +120,7 @@ try {
 Create a file in the `__mocks__` directory called `@smg-automotive/api-client-pkg.ts` with the following content:
 
 ````typescript
-export const ApiClient = {
-  get: jest.fn().mockReturnValue(Promise.resolve()),
-  post: jest.fn().mockReturnValue(Promise.resolve()),
-  put: jest.fn().mockReturnValue(Promise.resolve()),
-  delete: jest.fn().mockReturnValue(Promise.resolve()),
-}
-export const ResponseError = Error
+export { ApiClient } from "@smg-automotive/api-client-pkg/__mocks__/index"
 ````
 
 By default, all the API calls will succeed. If you want to reject it or return a specific value you can do this as
