@@ -75,8 +75,7 @@ await ApiClient.post<{ id: number }, { name: string; listingIds: number[] }>(
 
 ### Error handling
 
-The promise is rejected if any error occurs on API level. Use `try/catch` to add error
-handling.
+The promise is rejected if any error occurs on API level. Use `try/catch` to add error handling.
 
 ````typescript
 try {
@@ -108,6 +107,7 @@ export const ApiClient = {
   put: jest.fn().mockReturnValue(Promise.resolve()),
   delete: jest.fn().mockReturnValue(Promise.resolve()),
 }
+export const ResponseError = Error
 ````
 
 By default, all the API calls will succeed. If you want to reject it or return a specific value you can do this as
@@ -127,11 +127,26 @@ jest.spyOn(ApiClient, "get").mockImplementation((path, options) => {
 })
 
 // or using mock
+;(ApiClient.get as jest.Mock).mockReturnValueOnce(
+  Promise.reject(
+    new ResponseError(
+      { status: 422, statusText: "" },
+      "Some data from the response body"
+    )
+  )
+)
+````
+
+if you want to overwrite the mock behavior of all **used** api-client functions in your test file, you can also
+use `jest.mock` for it:
+
+````typescript
 jest.mock("@smg-automotive/api-client-pkg", () => ({
   ApiClient: {
     get: jest
       .fn()
       .mockImplementation(() => Promise.resolve([{ name: "bmw", key: "bmw" }])),
+    post: jest.fn().mockImplementation(() => Promise.reject("Something went wrong")),
   },
 }))
 ````
