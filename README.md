@@ -10,7 +10,7 @@ npm install @smg-automotive/api-client-pkg
 ```
 
 ````typescript
-import { ApiClient } from "@smg-automotive/api-client-pkg"
+import { ApiClient, ResponseError } from "@smg-automotive/api-client-pkg"
 ````
 
 ### Configuration
@@ -20,9 +20,14 @@ The available instance methods are listed below. The specified config will be me
 ````typescript
 ApiClient.configure({
   baseUrl: 'https://api.automotive.ch/api',
-  headers: { 'Content-Type': 'application/json' },
+  headers: { 'Accept-Language': 'fr-CH' },
 })
 ````
+
+| property | type   | default                                   |
+|----------|--------|-------------------------------------------|
+| baseUrl  | string | ""                                        |
+| headers  | object | {  'Content-Type':  'application/json' }  |
 
 ### Instance methods
 
@@ -91,7 +96,7 @@ try {
       price: 36500,
     }
   )
-} catch (error: ResponseError) {
+} catch (error) {
   // do any error handling you want
 }
 ````

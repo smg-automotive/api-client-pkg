@@ -8,6 +8,16 @@ const packageJson = require('./package.json')
 
 export default [
   {
+    input: '__mocks__/index.ts',
+    output: [
+      {
+        file: 'dist/__mocks__/index.js',
+        format: 'esm',
+      },
+    ],
+    plugins: [typescript({ tsconfig: './tsconfig.build.json' })],
+  },
+  {
     input: 'src/index.ts',
     output: [
       {
