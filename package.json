@@ -1,9 +1,10 @@
 {
-  "name": "@smg-automotive/example",
+  "name": "@smg-automotive/api-client-pkg",
   "version": "0.0.0-development",
-  "description": "A boilerplate package setup",
+  "description": "Simple wrapper with convenience features to connect to your favorite API",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist/**/*"
   ],
@@ -23,16 +24,13 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/smg-automotive/fe-example-pkg.git"
+    "url": "https://github.com/smg-automotive/api-client-pkg.git"
   },
-  "homepage": "https://github.com/smg-automotive/fe-example-pkg#readme",
+  "homepage": "https://github.com/smg-automotive/api-client-pkg#readme",
   "devDependencies": {
     "@rollup/plugin-commonjs": "22.0.0",
     "@rollup/plugin-node-resolve": "13.3.0",
     "@rollup/plugin-typescript": "8.3.2",
-    "@testing-library/jest-dom": "5.16.4",
-    "@testing-library/react": "13.2.0",
-    "@testing-library/user-event": "14.1.1",
     "@types/jest": "27.5.0",
     "@typescript-eslint/eslint-plugin": "5.22.0",
     "@typescript-eslint/parser": "5.22.0",
@@ -47,7 +45,6 @@
     "eslint-plugin-react-hooks": "4.5.0",
     "eslint-plugin-testing-library": "5.3.1",
     "jest": "28.0.3",
-    "jest-environment-jsdom": "28.0.2",
     "prettier": "2.6.2",
     "rimraf": "3.0.2",
     "rollup": "2.72.0",

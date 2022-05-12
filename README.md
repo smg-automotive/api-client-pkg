@@ -1,33 +1,175 @@
-To use this template create a new repository and select `example-pkg` from the template dropdown. Make sure to name your repository following `<name>-pkg` convention. Make sure to apply branch protection rules to `main` branch and enable `dependabot` for security updates.
-If you're interested in automated dependency updates make sure that `renovate` has access to the new repository.
+# api-client-pkg
 
-# Things to do change when you use this repository as a template:
-- [ ] replace `example-pkg` with the name of your package in this `README`
-- [ ] update the `@smg-automotive/example` with the name of your package in `package.json`
-- [ ] update `repository` and `homepage` sections in `package.json` to point to your GitHub repository
-- [ ] ensure that Frontend team has the admin access to the repository
-- [ ] ensure that the Bots team has write access to the repository (this is needed to release the package)
-- [ ] provide usage examples in the `README.md`
-- [ ] enable the project on circleci.com to build and test your package
-- [ ] change the circleci status badge in this `README` to the new project
-- [ ] develop an awesome package
-- [ ] live long and prosper
-# example-pkg
-
-[![CircleCI](https://circleci.com/gh/smg-automotive/example-pkg/tree/main.svg?style=svg&circle-token=c183f151fea3c74453cf8dd962d31e115906a300)](https://circleci.com/gh/smg-automotive/example-pkg/tree/main)
+[![CircleCI](https://circleci.com/gh/smg-automotive/api-client-pkg/tree/main.svg?style=svg&circle-token=c183f151fea3c74453cf8dd962d31e115906a300)](https://circleci.com/gh/smg-automotive/example-pkg/tree/main)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
 ## Usage
+
 ```
-npm install @smg-automotive/example
+npm install @smg-automotive/api-client-pkg
 ```
 
+````typescript
+import { ApiClient, ResponseError } from "@smg-automotive/api-client-pkg"
+````
+
+### Configuration
+
+The available instance methods are listed below. The specified config will be merged with the instance config.
+
+````typescript
+ApiClient.configure({
+  baseUrl: 'https://api.automotive.ch/api',
+  headers: { 'Accept-Language': 'fr-CH' },
+})
+````
+
+| property | type   | default                                   |
+|----------|--------|-------------------------------------------|
+| baseUrl  | string | ""                                        |
+| headers  | object | {  'Content-Type':  'application/json' }  |
+
+### Instance methods
+
+The ApiClient provides promise-based methods for `GET`, `POST`, `PUT` and `DELETE`.
+
+### Typing
+
+You can define the request and the response type of your method as follows:
+
+````typescript
+interface Car {
+  make: string
+  horsepower: number
+}
+
+// data has type Car
+var data = await ApiClient.get<Car>({ path: '/listings/search' })
+
+// data has type { id: string } and body is typed as Car
+var data = await ApiClient.post<{ id: string }, Car>({
+  path: '/listings/create',
+  body: {
+    make: 'bmw',
+    horsepower: 300
+  }
+})
+````
+
+### Parameters
+
+If your request URL contains parameters, you can use curly brackets and the ApiClient replaces it with the passed data.
+This is aligned with the OpenAPI specification used by Swagger. Hence, you can easily search for occurrences of your
+APIs.
+
+````typescript
+// fetch is called with https://baseUrl.api.ch/dealers/123/listings/456
+await ApiClient.get({
+  path: 'dealers/{dealerId}/listings/{listingId}',
+  params: {
+    dealerId: 123,
+    listingId: 456
+  }
+})
+````
+
+### Authorization
+
+You can pass `accessToken` to the request options if you are talking to a protected API. The client will automatically
+set the header with a Bearer token.
+
+````typescript
+// fetch is called with the header { Authorization: `Bearer ${accessToken}` }
+await ApiClient.post<{ id: number }, { name: string; listingIds: number[] }>({
+  path: "users/me/listing-comparisons",
+  body: {
+    name: "test1",
+    listingIds: [890163]
+  },
+  options: {
+    accessToken: authHeader.accessToken
+  }
+})
+````
+
+### Error handling
+
+The promise is rejected if any error occurs on API level. Use `try/catch` to add error handling.
+
+````typescript
+try {
+  // res has the type LeasingCalculation
+  const res = await ApiClient.post<LeasingCalculation, LeasingData>({
+    path: "listings/calculate-leasing",
+    body: {
+      downPayment: 7300,
+      duration: 48,
+      estimatedKmPerYear: 10000,
+      firstRegistrationDate: "2020-07-01",
+      residualValue: 12045,
+      price: 36500,
+    }
+  })
+} catch (error) {
+  // do any error handling you want
+}
+````
+
+### Testing
+
+Create a file in the `__mocks__` directory called `@smg-automotive/api-client-pkg.ts` with the following content:
+
+````typescript
+export { ApiClient } from "@smg-automotive/api-client-pkg/__mocks__/index"
+````
+
+By default, all the API calls will succeed. If you want to reject it or return a specific value you can do this as
+follows:
+
+````typescript
+jest.spyOn(ApiClient, "get").mockImplementation(({ path }) => {
+  return Promise.resolve([{ name: "bmw", key: "bmw" }])
+})
+
+jest.spyOn(ApiClient, "get").mockImplementation(({ path }) => {
+  return Promise.reject(
+    new ResponseError({ status: 422, statusText: "" }, "Some data from the response body")
+  )
+})
+
+// or using mock
+;(ApiClient.get as jest.Mock).mockReturnValueOnce(
+  Promise.reject(
+    new ResponseError(
+      { status: 422, statusText: "" },
+      "Some data from the response body"
+    )
+  )
+)
+````
+
+if you want to overwrite the mock behavior of all **used** api-client functions in your test file, you can also
+use `jest.mock` for it:
+
+````typescript
+jest.mock("@smg-automotive/api-client-pkg", () => ({
+  ApiClient: {
+    get: jest
+      .fn()
+      .mockImplementation(() => Promise.resolve([{ name: "bmw", key: "bmw" }])),
+    post: jest.fn().mockImplementation(() => Promise.reject("Something went wrong")),
+  },
+}))
+````
+
 ## Development
+
 ```
 npm run build
 ```
 
 You can link your local npm package to integrate it with any local project:
+
 ```
 cd smg-automotive-example-pkg
 npm run build
@@ -38,5 +180,5 @@ npm link ../smg-automotive-example-pkg
 
 ## Release a new version
 
-New versions are released on the ci using semantic-release as soon as you merge into master. Please
-make sure your merge commit message adheres to the corresponding conventions.
+New versions are released on the ci using semantic-release as soon as you merge into master. Please make sure your merge
+commit message adheres to the corresponding conventions.
