@@ -82,8 +82,8 @@ class ApiClient {
   }
 
   private static async returnData(response: Response) {
-    const size = Number(response.headers.get('content-length') || 0)
-    const data = size > 0 ? await response.json() : null
+    const text = await response.text()
+    const data = text.length > 0 ? JSON.parse(text) : null
     if (!response.ok) {
       throw new ResponseError(response, data)
     }

@@ -127,13 +127,11 @@ By default, all the API calls will succeed. If you want to reject it or return a
 follows:
 
 ````typescript
-jest.spyOn(ApiClient, "get").mockImplementation((path, options) => {
-  // do something with path and options (e.g. create a switch statement for the methods used)
+jest.spyOn(ApiClient, "get").mockImplementation(({ path }) => {
   return Promise.resolve([{ name: "bmw", key: "bmw" }])
 })
 
-jest.spyOn(ApiClient, "get").mockImplementation((path, options) => {
-  // do something with path and options (e.g. create a switch statement for the methods used)
+jest.spyOn(ApiClient, "get").mockImplementation(({ path }) => {
   return Promise.reject(
     new ResponseError({ status: 422, statusText: "" }, "Some data from the response body")
   )
