@@ -1,116 +1,122 @@
-import { ApiClient } from '../index'
-import { mockFetchFailOnce, mockResolvedOnce } from '../../.jest/helpers/fetch'
+import { ApiClient } from '../index';
+import { mockFetchFailOnce, mockResolvedOnce } from '../../.jest';
 
 describe('ApiClient', () => {
   it('throws if there is no baseUrl', async () => {
     await expect(async () => {
-      await ApiClient.get<{ data: string }>({ path: '/listings/search' })
+      await ApiClient.get<{ data: string }>({ path: '/listings/search' });
     }).rejects.toThrow(
-      'ApiClient is not configured. Please run ApiClient.configure() or pass a custom baseUrl.',
-    )
-  })
+      'ApiClient is not configured. Please run ApiClient.configure() or pass a custom baseUrl.'
+    );
+  });
 
   it('throws if fetch fails', async () => {
-    mockFetchFailOnce()
+    mockFetchFailOnce();
     await expect(
       ApiClient.get<string>({
         path: '/listings/search',
         options: {
           baseUrl: 'url',
         },
-      }),
-    ).rejects.toThrow()
-  })
+      })
+    ).rejects.toThrow();
+  });
 
   it('overwrites the configured baseUrl', async () => {
     ApiClient.configure({
       baseUrl: 'https://api.automotive.ch/api',
-    })
-    mockResolvedOnce({ data: '12345' })
+    });
+    mockResolvedOnce({ data: '12345' });
     await ApiClient.get<{ data: string }>({
       path: '/listings/search',
       options: {
         baseUrl: 'https://petstoreapi.ch',
       },
-    })
+    });
     expect(fetch).toHaveBeenCalledWith(
       'https://petstoreapi.ch/listings/search',
-      expect.any(Object),
-    )
-  })
+      expect.any(Object)
+    );
+  });
 
   it('removes duplicated slashes', async () => {
-    mockResolvedOnce({ data: '12345' })
+    mockResolvedOnce({ data: '12345' });
     await ApiClient.get<{ data: string }>({
       path: '/listings/search',
       options: {
         baseUrl: 'https://petstoreapi.ch/',
       },
-    })
+    });
     expect(fetch).toHaveBeenCalledWith(
       'https://petstoreapi.ch/listings/search',
-      expect.any(Object),
-    )
-  })
+      expect.any(Object)
+    );
+  });
 
   it('allows to configure a custom header', async () => {
-    mockResolvedOnce({ data: '12345' })
+    mockResolvedOnce({ data: '12345' });
     await ApiClient.get<{ data: string }>({
       path: '/listings/search',
       options: {
         baseUrl: 'https://petstoreapi.ch',
         headers: {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           'Content-Type': 'text/xml',
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           'Accept-Language': 'fr-CH',
         },
       },
-    })
+    });
     expect(fetch).toHaveBeenCalledWith(
       'https://petstoreapi.ch/listings/search',
       expect.objectContaining({
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         headers: { 'Content-Type': 'text/xml', 'Accept-Language': 'fr-CH' },
-      }),
-    )
-  })
+      })
+    );
+  });
 
   it('merges the custom header with the configuration', async () => {
-    mockResolvedOnce({ data: '12345' })
+    mockResolvedOnce({ data: '12345' });
     ApiClient.configure({
       baseUrl: 'https://api.automotive.ch/api',
       headers: {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         'Accept-Language': 'fr-CH',
       },
-    })
+    });
     await ApiClient.get<{ data: string }>({
       path: '/listings/search',
       options: {
         headers: {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           'Content-Type': 'text/xml',
         },
       },
-    })
+    });
     expect(fetch).toHaveBeenCalledWith(
       'https://api.automotive.ch/api/listings/search',
       expect.objectContaining({
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         headers: { 'Content-Type': 'text/xml', 'Accept-Language': 'fr-CH' },
-      }),
-    )
-  })
+      })
+    );
+  });
 
   it('creates an authorization header if access token is passed', async () => {
-    mockResolvedOnce({ data: '12345' })
+    mockResolvedOnce({ data: '12345' });
     await ApiClient.get<{ data: string }>({
       path: '/listings/search',
       options: {
         baseUrl: 'https://petstoreapi.ch',
         accessToken: 'abcdef',
       },
-    })
+    });
     expect(fetch).toHaveBeenCalledWith(
       'https://petstoreapi.ch/listings/search',
       expect.objectContaining({
         headers: expect.objectContaining({ Authorization: 'Bearer abcdef' }),
-      }),
-    )
-  })
-})
+      })
+    );
+  });
+});

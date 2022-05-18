@@ -7,4 +7,4 @@ export default {
   restoreMocks: true,
   roots: ['<rootDir>/src'],
   setupFilesAfterEnv: ['<rootDir>/.jest/setup/fetchMock.ts'],
-}
+};

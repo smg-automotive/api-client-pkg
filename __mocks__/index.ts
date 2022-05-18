@@ -3,6 +3,6 @@ export const ApiClient = {
   post: jest.fn().mockReturnValue(Promise.resolve()),
   put: jest.fn().mockReturnValue(Promise.resolve()),
   delete: jest.fn().mockReturnValue(Promise.resolve()),
-}
+};
 
-export const ResponseError = Error
+export const ResponseError = Error;
