@@ -176,3 +176,31 @@ class ApiClient {
 const apiClient = new ApiClient();
 
 export { ResponseError, apiClient as ApiClient };
+
+// FIXME
+
+export interface Configuration {
+  [path: string]: {
+    get: () => Promise<never>;
+    put: (input: never) => Promise<never>;
+  };
+}
+
+export type PathParameter<TPath extends string> =
+  // Define our template in terms of Head/{Parameter}Tail
+  TPath extends `${infer Head}/{${infer Parameter}}${infer Tail}`
+    ? [pathParameter: string | number, ...params: PathParameter<Tail>]
+    : [];
+
+export type Path<StrongConfiguration extends Configuration> = <
+  TPath extends keyof StrongConfiguration
+>(
+  path: TPath,
+  ...pathParam: PathParameter<TPath>
+) => StrongConfiguration[TPath];
+
+export declare function StronglyTypedClient<
+  StrongConfiguration extends Configuration
+>(): {
+  path: Path<StrongConfiguration>;
+};
