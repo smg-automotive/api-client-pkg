@@ -12,20 +12,4 @@ interface IMessageLeadClient extends ClientConfiguration {
   };
 }
 
-const MessageLeadClient = StronglyTypedClient<IMessageLeadClient>();
-
-MessageLeadClient.path(
-  '/listings/{listingId}/message-leads/{messageLeadId}',
-  200,
-  100
-)
-  .get()
-  .then((res) => console.log(res));
-
-MessageLeadClient.path(
-  '/listings/{listingId}/message-leads/{messageLeadId}',
-  200,
-  100
-)
-  .put({ name: 'colin' })
-  .then((res) => console.log(res));
+export const MessageLeadClient = StronglyTypedClient<IMessageLeadClient>();
