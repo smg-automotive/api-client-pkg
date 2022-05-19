@@ -179,28 +179,29 @@ export { ResponseError, apiClient as ApiClient };
 
 // FIXME
 
-export interface Configuration {
+export interface ClientConfiguration {
   [path: string]: {
-    get: () => Promise<never>;
-    put: (input: never) => Promise<never>;
+    get: () => Promise<any>;
+    put: (input: any) => Promise<any>;
   };
 }
 
 export type PathParameter<TPath extends string> =
-  // Define our template in terms of Head/{Parameter}Tail
+  // TODO: Dynamic tuple labels are not supported
   TPath extends `${infer Head}/{${infer Parameter}}${infer Tail}`
     ? [pathParameter: string | number, ...params: PathParameter<Tail>]
     : [];
 
-export type Path<StrongConfiguration extends Configuration> = <
+export type Path<StrongConfiguration extends ClientConfiguration> = <
   TPath extends keyof StrongConfiguration
 >(
   path: TPath,
   ...pathParam: PathParameter<TPath>
 ) => StrongConfiguration[TPath];
 
+// TODO: How can we implement this?
 export declare function StronglyTypedClient<
-  StrongConfiguration extends Configuration
+  StrongConfiguration extends ClientConfiguration
 >(): {
   path: Path<StrongConfiguration>;
 };

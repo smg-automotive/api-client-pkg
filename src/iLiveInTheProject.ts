@@ -1,10 +1,10 @@
-import { Configuration, StronglyTypedClient } from './index';
+import { ClientConfiguration, StronglyTypedClient } from './index';
 
 interface MessageLead {
   name: string;
 }
 
-interface IMessageLeadClient extends Configuration {
+interface IMessageLeadClient extends ClientConfiguration {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   '/listings/{listingId}/message-leads/{messageLeadId}': {
     get: () => Promise<MessageLead>;
