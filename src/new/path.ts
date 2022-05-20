@@ -1,4 +1,4 @@
-import { PathParameters } from './pathParameter';
+import { PathParameters } from './pathParameters';
 import { ClientConfiguration } from './configuration';
 
 export type Path<Configuration extends ClientConfiguration> = <

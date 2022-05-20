@@ -16,3 +16,36 @@ export type PathParameters<P extends string> = Record<
 
 // type TestWithoutParams = PathParameters<'/test'>
 // {}
+
+const paramName = (param: string) => param.replace(/(\{|\})/g, '');
+
+export const replaceParameters = ({
+  path,
+  params,
+}: {
+  path: string;
+  params?: Record<string, string | number>;
+}) => {
+  const parameters = path.match(/{(.*?)}/g) || [];
+
+  if (parameters.length === 0) {
+    return path;
+  }
+
+  let replacedPath = path;
+  parameters.forEach((paramPattern) => {
+    const name = paramName(paramPattern);
+    const value = params?.[name];
+
+    if (!value) {
+      throw new Error(
+        `Parameter "${name}" missing. Expected parameters are: ${parameters
+          .map(paramName)
+          .join(', ')}`
+      );
+    }
+
+    replacedPath = replacedPath.replace(paramPattern, `${value}`);
+  });
+  return replacedPath;
+};
