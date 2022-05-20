@@ -1,8 +1,14 @@
+import { Response } from './response';
+
 type Methods = {
-  get?: (data?: unknown) => Promise<unknown>;
-  post?: (data?: unknown) => Promise<unknown>;
-  put?: (data?: unknown) => Promise<unknown>;
-  delete?: (data?: unknown) => Promise<unknown>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  get?: (data?: any) => Promise<Response<any>>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  post?: (data?: any) => Promise<Response<any>>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  put?: (data?: any) => Promise<Response<any>>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  delete?: (data?: any) => Promise<Response<any>>;
 };
 
 export type ClientConfiguration = Record<string, Methods>;
