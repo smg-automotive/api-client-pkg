@@ -16,8 +16,10 @@ export function StronglyTypedClient<
       });
       return {
         get: () => {
+          // TODO: current client only exposes body not the response object
           return ApiClient.get({ path: replacedPath });
         },
+        // TODO: remaining HTTP methods
       };
     },
   } as { path: Path<Configuration> };
