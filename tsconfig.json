@@ -3,6 +3,7 @@
     "strict": true,
     "jsx": "react",
     "module": "esnext",
+    "target": "es2017",
     "declaration": true,
     "declarationDir": "types",
     "sourceMap": true,
