@@ -1,6 +1,10 @@
-import { Listing, listingClient } from './listingClient';
 import { initApiClient } from '../index';
-import { mockApiFailOnce, mockResolvedOnce } from '../../.jest';
+import {
+  Listing,
+  listingClient,
+  mockApiFailOnce,
+  mockResolvedOnce,
+} from '../../.jest';
 
 describe('get', () => {
   beforeEach(() => {

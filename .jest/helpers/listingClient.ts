@@ -1,8 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { ResponseType } from '../responseType';
-import { ApiClient, RequestTypeWithBody } from '../index';
-import { ClientConfiguration, RequestType } from '../configuration';
+import {
+  ResponseType,
+  ApiClient,
+  RequestTypeWithBody,
+  ClientConfiguration,
+  RequestType,
+} from '../../src';
 
 export type Listing = {
   make: string;

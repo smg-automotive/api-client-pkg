@@ -1,6 +1,5 @@
-import { listingClient } from './listingClient';
 import { initApiClient } from '../index';
-import { mockResolvedOnce } from '../../.jest';
+import { listingClient, mockResolvedOnce } from '../../.jest';
 
 describe('post', () => {
   beforeEach(() => {

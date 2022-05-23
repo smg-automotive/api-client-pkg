@@ -1,6 +1,5 @@
-import { listingClient } from './listingClient';
 import { initApiClient } from '../index';
-import { mockResolvedOnce } from '../../.jest';
+import { listingClient, mockResolvedOnce } from '../../.jest';
 
 describe('put', () => {
   beforeEach(() => {
@@ -17,7 +16,7 @@ describe('put', () => {
       },
     });
     expect(fetch).toHaveBeenCalledWith(
-      'https://api.automotive.ch/api/listings/update',
+      'https://api.automotive.ch/api/listings/123',
       expect.objectContaining({ method: 'PUT' })
     );
   });
