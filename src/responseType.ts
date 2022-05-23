@@ -7,7 +7,7 @@ interface BaseResponse {
 
 interface ErrorResponse extends BaseResponse {
   ok: false;
-  status: 400 | 404 | 500;
+  status: 400 | 401 | 403 | 404 | 500;
   body: {
     message: string;
     errors?: Record<string, string>[];

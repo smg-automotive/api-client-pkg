@@ -47,7 +47,7 @@ class FetchClient {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore status may differ from our types
       status: response.status,
-      ok: true,
+      ok: response.ok,
       body: data,
     };
   }
