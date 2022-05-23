@@ -131,7 +131,7 @@ if (res.ok) {
   // it did not work for some reason
 }
 
-if(res.status === 401) {
+if (res.status === 401) {
   // it did not work because user is not authorized!
   // res.ok is false
 }
@@ -145,29 +145,27 @@ Create a file in the `__mocks__` directory called `@smg-automotive/api-client-pk
 export { ApiClient } from "@smg-automotive/api-client-pkg/__mocks__/index"
 ````
 
-By default, all the API calls will succeed. If you want to reject it or return a specific value you can do this as
-follows:
+By default, all the API calls will succeed and return an empty body. If you want to reject it or return a specific value
+you can do this by setting a spy on the created client:
 
 ````typescript
-jest.spyOn(ApiClient, "get").mockImplementation(({ path }) => {
-  return Promise.resolve([{ name: "bmw", key: "bmw" }])
-})
+import { comparisonClient } from "~/clients/userListingComparison"
 
-jest.spyOn(ApiClient, "get").mockImplementation(({ path }) => {
-  return Promise.reject(
-    new ResponseError({ status: 422, statusText: "" }, "Some data from the response body")
+jest
+  .spyOn(
+    comparisonClient.path(
+      // note that this path matches the path you want to mock
+      "users/me/listing-comparisons/{listingComparisonId}"
+    ),
+    "get"
   )
-})
-
-// or using mock
-;(ApiClient.get as jest.Mock).mockReturnValueOnce(
-  Promise.reject(
-    new ResponseError(
-      { status: 422, statusText: "" },
-      "Some data from the response body"
-    )
+  .mockReturnValueOnce(
+    Promise.resolve({
+      status: 401,
+      body: { error: "Unauthorized" },
+      ok: false,
+    })
   )
-)
 ````
 
 if you want to overwrite the mock behavior of all **used** api-client functions in your test file, you can also
@@ -175,12 +173,22 @@ use `jest.mock` for it:
 
 ````typescript
 jest.mock("@smg-automotive/api-client-pkg", () => ({
-  ApiClient: {
-    get: jest
-      .fn()
-      .mockImplementation(() => Promise.resolve([{ name: "bmw", key: "bmw" }])),
-    post: jest.fn().mockImplementation(() => Promise.reject("Something went wrong")),
-  },
+  ApiClient: () => ({
+    path: () => {
+      return {
+        get: jest.fn().mockReturnValue(
+          Promise.resolve({
+            status: 401,
+            body: { error: "Unauthorized" },
+            ok: false,
+          })
+        ),
+        post: jest.fn(),
+        put: jest.fn(),
+        delete: jest.fn(),
+      }
+    },
+  }),
 }))
 ````
 
