@@ -1,19 +1,20 @@
-import { fetchMock } from '../setup/fetchMock'
+import { fetchMock } from '../setup/fetchMock';
 
 export const mockResolvedOnce = (value: any) => {
   fetchMock.mockReturnValueOnce(
     Promise.resolve({
+      status: 200,
       ok: true,
       text: () => {
-        return Promise.resolve(JSON.stringify(value))
+        return Promise.resolve(JSON.stringify(value));
       },
-    }),
-  )
-}
+    })
+  );
+};
 
 export const mockFetchFailOnce = () => {
-  fetchMock.mockReturnValueOnce(Promise.reject(new Error()))
-}
+  fetchMock.mockReturnValueOnce(Promise.reject(new Error()));
+};
 
 export const mockApiFailOnce = () => {
   fetchMock.mockReturnValueOnce(
@@ -21,6 +22,13 @@ export const mockApiFailOnce = () => {
       ok: false,
       statusText: 'Wrong data format',
       status: 400,
-    }),
-  )
-}
+      text: () => {
+        return Promise.resolve(
+          JSON.stringify({
+            message: 'Wrong data format',
+          })
+        );
+      },
+    })
+  );
+};
