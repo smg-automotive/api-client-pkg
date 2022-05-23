@@ -9,16 +9,14 @@
 npm install @smg-automotive/api-client-pkg
 ```
 
-````typescript
-import { ApiClient, ResponseError } from "@smg-automotive/api-client-pkg"
-````
-
 ### Configuration
 
 The available instance methods are listed below. The specified config will be merged with the instance config.
 
 ````typescript
-ApiClient.configure({
+import { initApiClient } from "@smg-automotive/api-client-pkg"
+
+initApiClient({
   baseUrl: 'https://api.automotive.ch/api',
   headers: { 'Accept-Language': 'fr-CH' },
 })
@@ -29,49 +27,74 @@ ApiClient.configure({
 | baseUrl  | string | ""                                        |
 | headers  | object | {  'Content-Type':  'application/json' }  |
 
-### Instance methods
+### Creating a client
 
-The ApiClient provides promise-based methods for `GET`, `POST`, `PUT` and `DELETE`.
+Create a new typescript file and define an interface that describes your API. The interface must extend
+from `ClientConfiguration`. The key defines the path to the API (use curly brackets for dynamic parameters) and the
+value defines the available methods for that path.
 
-### Typing
+```typescript
+import {
+  ApiClient,
+  ClientConfiguration,
+  RequestType,
+  RequestTypeWithBody,
+  ResponseType,
+} from "@smg-automotive/api-client-pkg"
 
-You can define the request and the response type of your method as follows:
-
-````typescript
-interface Car {
-  make: string
-  horsepower: number
+interface UserListingComparisonClient extends ClientConfiguration {
+  "users/me/listing-comparisons": {
+    post: (
+      request: RequestTypeWithBody<ListingComparison>
+    ) => Promise<ResponseType<ListingComparisonCreateResponse>>
+  }
+  "users/me/listing-comparisons/{listingComparisonId}": {
+    put: (
+      request: RequestTypeWithBody<ListingComparison>
+    ) => Promise<ResponseType>
+    delete: (request: RequestType) => Promise<ResponseType>
+    get: (request: RequestType) => Promise<ResponseType<ListingComparison>>
+  }
 }
 
-// data has type Car
-var data = await ApiClient.get<Car>({ path: '/listings/search' })
+export const comparisonClient = ApiClient<UserListingComparisonClient>()
+```
 
-// data has type { id: string } and body is typed as Car
-var data = await ApiClient.post<{ id: string }, Car>({
-  path: '/listings/create',
-  body: {
-    make: 'bmw',
-    horsepower: 300
-  }
-})
-````
+### Using the client
 
-### Parameters
+Depending on your client configuration, you are going to get typing for the request and the response body.
 
-If your request URL contains parameters, you can use curly brackets and the ApiClient replaces it with the passed data.
-This is aligned with the OpenAPI specification used by Swagger. Hence, you can easily search for occurrences of your
-APIs.
+```typescript
+const res = await comparisonClient
+  .path("users/me/listing-comparisons/{listingComparisonId}", {
+    listingComparisonId: 1234,
+  })
+  .get()
 
-````typescript
-// fetch is called with https://baseUrl.api.ch/dealers/123/listings/456
-await ApiClient.get({
-  path: 'dealers/{dealerId}/listings/{listingId}',
-  params: {
-    dealerId: 123,
-    listingId: 456
-  }
-})
-````
+// you can also use res.ok if you do not care about the specific code
+if (res.status === 204) {
+  // res.body is typed to ListingComparison
+} else {
+  // request failed
+}
+```
+
+If you are using curly brackets for the dynamic parameters, you also get typing for the path parameters. Furthermore,
+the api client replaces those occurrences automatically for you.
+
+```typescript
+await comparisonClient
+  // this will fail with "Property 'listingComparisonId' is missing"
+  .path("users/me/listing-comparisons/{listingComparisonId}", {})
+  .get()
+
+await comparisonClient
+  // this will call fetch with https://yourBaseUrl.ch/users/me/listing-comparisons/1234
+  .path("users/me/listing-comparisons/{listingComparisonId}", {
+    listingComparisonId: 1234,
+  })
+  .get()
+```
 
 ### Authorization
 
@@ -80,38 +103,37 @@ set the header with a Bearer token.
 
 ````typescript
 // fetch is called with the header { Authorization: `Bearer ${accessToken}` }
-await ApiClient.post<{ id: number }, { name: string; listingIds: number[] }>({
-  path: "users/me/listing-comparisons",
-  body: {
-    name: "test1",
-    listingIds: [890163]
-  },
-  options: {
-    accessToken: authHeader.accessToken
-  }
-})
+await comparisonClient
+  .path("users/me/listing-comparisons/{listingComparisonId}")
+  .get({
+    options: {
+      accessToken: authHeader.accessToken,
+    },
+  })
 ````
 
 ### Error handling
 
-The promise is rejected if any error occurs on API level. Use `try/catch` to add error handling.
+The promise is not rejected if any error occurs on API level. You can check for `res.ok` or the http status code.
 
 ````typescript
-try {
-  // res has the type LeasingCalculation
-  const res = await ApiClient.post<LeasingCalculation, LeasingData>({
-    path: "listings/calculate-leasing",
-    body: {
-      downPayment: 7300,
-      duration: 48,
-      estimatedKmPerYear: 10000,
-      firstRegistrationDate: "2020-07-01",
-      residualValue: 12045,
-      price: 36500,
-    }
+const res = await comparisonClient
+  .path("users/me/listing-comparisons/{listingComparisonId}")
+  .get({
+    options: {
+      accessToken: authHeader.accessToken,
+    },
   })
-} catch (error) {
-  // do any error handling you want
+
+if (res.ok) {
+  // it worked!
+} else {
+  // it did not work for some reason
+}
+
+if(res.status === 401) {
+  // it did not work because user is not authorized!
+  // res.ok is false
 }
 ````
 
