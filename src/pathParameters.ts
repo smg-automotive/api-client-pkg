@@ -8,15 +8,6 @@ export type PathParameters<P extends string> = Record<
   string | number
 >;
 
-// type TestWithParams = PathParameters<'/test/{foo}/bar/{baz}'>
-// {
-//   foo: string | number;
-//   baz: string | number;
-// }
-
-// type TestWithoutParams = PathParameters<'/test'>
-// {}
-
 const paramName = (param: string) => param.replace(/(\{|\})/g, '');
 
 export const replaceParameters = ({
@@ -39,7 +30,7 @@ export const replaceParameters = ({
 
     if (!value) {
       throw new Error(
-        `Parameter "${name}" missing. Expected parameters are: ${parameters
+        `Parameter ${name} missing. Expected parameters are: ${parameters
           .map(paramName)
           .join(', ')}`
       );

@@ -1,7 +1,9 @@
-import { Response } from './response';
+/* eslint-disable @typescript-eslint/naming-convention */
+import { ResponseType } from './responseType';
+
 import { ClientConfiguration } from './configuration';
 
-import { StronglyTypedClient } from '.';
+import { ApiClient } from './index';
 
 type Book = {
   author: string;
@@ -10,18 +12,16 @@ type Book = {
 };
 
 interface LibraryConfiguration extends ClientConfiguration {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   '/books': {
-    get: () => Promise<Response<Book[]>>;
-    post: (data: Book) => Promise<Response>;
+    get: () => Promise<ResponseType<Book[]>>;
+    post: ({ data }: { data: Book }) => Promise<ResponseType>;
   };
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   '/books/{id}': {
-    get: () => Promise<Response<Book>>;
+    get: () => Promise<ResponseType<Book>>;
   };
 }
 
-const libraryClient = StronglyTypedClient<LibraryConfiguration>();
+const libraryClient = ApiClient<LibraryConfiguration>();
 
 const bookResponse = await libraryClient.path('/books/{id}', { id: 3 }).get();
 
