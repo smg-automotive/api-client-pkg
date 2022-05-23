@@ -104,7 +104,9 @@ set the header with a Bearer token.
 ````typescript
 // fetch is called with the header { Authorization: `Bearer ${accessToken}` }
 await comparisonClient
-  .path("users/me/listing-comparisons/{listingComparisonId}")
+  .path("users/me/listing-comparisons/{listingComparisonId}", {
+    listingComparisonId: 1234,
+  })
   .get({
     options: {
       accessToken: authHeader.accessToken,
@@ -118,7 +120,9 @@ The promise is not rejected if any error occurs on API level. You can check for 
 
 ````typescript
 const res = await comparisonClient
-  .path("users/me/listing-comparisons/{listingComparisonId}")
+  .path("users/me/listing-comparisons/{listingComparisonId}", {
+    listingComparisonId: 1234,
+  })
   .get({
     options: {
       accessToken: authHeader.accessToken,
@@ -145,8 +149,8 @@ Create a file in the `__mocks__` directory called `@smg-automotive/api-client-pk
 export { ApiClient } from "@smg-automotive/api-client-pkg/__mocks__/index"
 ````
 
-By default, all the API calls will succeed and return an empty body. If you want to reject it or return a specific value
-you can do this by setting a spy on the created client:
+By default, all the API calls will succeed and return an empty body. If you want to return a specific value you can do
+this by setting a spy on the created client:
 
 ````typescript
 import { comparisonClient } from "~/clients/userListingComparison"
