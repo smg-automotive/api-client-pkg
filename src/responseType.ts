@@ -9,7 +9,8 @@ interface ErrorResponse extends BaseResponse {
   ok: false;
   status: 400 | 401 | 403 | 404 | 500;
   body: {
-    message: string;
+    error?: string;
+    message?: string;
     errors?: Record<string, string>[];
   };
 }
