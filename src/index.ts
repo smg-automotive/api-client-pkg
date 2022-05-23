@@ -52,6 +52,8 @@ const initApiClient = (
   fetchClient.init(configuration);
 };
 
+type BaseFactory<T> = (customData: Partial<T>) => T;
+
 export {
   StronglyTypedClient as ApiClient,
   initApiClient,
@@ -59,4 +61,5 @@ export {
   ResponseType,
   RequestType,
   RequestTypeWithBody,
+  BaseFactory,
 };
