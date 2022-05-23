@@ -21,7 +21,7 @@ class FetchClient {
     const baseUrl = options?.baseUrl || this.configuration.baseUrl;
     if (!baseUrl) {
       throw new Error(
-        'FetchClient is not configured. Please run init() or pass a custom baseUrl.'
+        'FetchClient is not configured. Please run initApiClient() or pass a custom baseUrl.'
       );
     }
     return [

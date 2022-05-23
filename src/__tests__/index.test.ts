@@ -10,7 +10,7 @@ describe('ApiClient', () => {
     await expect(async () => {
       await listingClient.path('/listings/search').get();
     }).rejects.toThrow(
-      'FetchClient is not configured. Please run init() or pass a custom baseUrl.'
+      'FetchClient is not configured. Please run initApiClient() or pass a custom baseUrl.'
     );
   });
 

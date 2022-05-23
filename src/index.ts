@@ -52,5 +52,11 @@ const initApiClient = (
   fetchClient.init(configuration);
 };
 
-export { StronglyTypedClient as ApiClient, initApiClient, ResponseType };
-export { ClientConfiguration, RequestType, RequestTypeWithBody };
+export {
+  StronglyTypedClient as ApiClient,
+  initApiClient,
+  ClientConfiguration,
+  ResponseType,
+  RequestType,
+  RequestTypeWithBody,
+};
