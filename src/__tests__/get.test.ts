@@ -31,7 +31,7 @@ describe('get', () => {
   it('has an error object if the request was not ok', async () => {
     mockApiFailOnce();
     const data = await listingClient.path('/listings/search').get();
-    if (data.status !== 200) {
+    if (!data.ok) {
       // eslint-disable-next-line jest/no-conditional-expect
       expect(data?.body?.message).toEqual('Wrong data format');
     }

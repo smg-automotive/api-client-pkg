@@ -14,19 +14,10 @@ interface ErrorResponse extends BaseResponse {
   };
 }
 
-interface SuccessResponseWithBody<Body> extends BaseResponse {
+interface SuccessResponse<Body> extends BaseResponse {
   ok: true;
-  status: 200;
+  status: 200 | 201 | 204;
   body: Body;
 }
 
-interface SuccessResponseWithoutBody extends BaseResponse {
-  ok: true;
-  status: 201 | 204;
-  body?: never;
-}
-
-export type ResponseType<Body = never> =
-  | ErrorResponse
-  | SuccessResponseWithBody<Body>
-  | SuccessResponseWithoutBody;
+export type ResponseType<Body = never> = ErrorResponse | SuccessResponse<Body>;
