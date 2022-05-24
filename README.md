@@ -25,6 +25,7 @@ import {
 
 interface ComparisonClientConfiguration extends ClientConfiguration {
   "users/me/listing-comparisons": {
+    get: () => ResponseType<ListingComparison[]>;
     post: (
       request: RequestType<ListingComparison>
     ) => ResponseType<ListingComparisonCreateResponse>
