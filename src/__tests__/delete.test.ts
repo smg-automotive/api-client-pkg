@@ -1,13 +1,6 @@
-import { initApiClient } from '../index';
 import { listingClient, mockResolvedOnce } from '../../.jest';
 
 describe('delete', () => {
-  beforeEach(() => {
-    initApiClient({
-      baseUrl: 'https://api.automotive.ch/api',
-    });
-  });
-
   it('calls fetch with DELETE', async () => {
     mockResolvedOnce({ data: '12345' });
     await listingClient

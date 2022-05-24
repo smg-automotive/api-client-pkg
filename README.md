@@ -9,24 +9,6 @@
 npm install @smg-automotive/api-client-pkg
 ```
 
-### Configuration
-
-The available instance methods are listed below. The specified config will be merged with the instance config.
-
-````typescript
-import { initApiClient } from "@smg-automotive/api-client-pkg"
-
-initApiClient({
-  baseUrl: 'https://api.automotive.ch/api',
-  headers: { 'Accept-Language': 'fr-CH' },
-})
-````
-
-| property | type   | default                                   |
-|----------|--------|-------------------------------------------|
-| baseUrl  | string | ""                                        |
-| headers  | object | {  'Content-Type':  'application/json' }  |
-
 ### Creating a client
 
 Create a new typescript file and define an interface that describes your API. The interface must extend
@@ -57,8 +39,39 @@ interface ComparisonClientConfiguration extends ClientConfiguration {
   }
 }
 
-export const comparisonClient = ApiClient<ComparisonClientConfiguration>()
+export const comparisonClient = ApiClient<ComparisonClientConfiguration>({
+  baseUrl: "https://api.automotive.ch/api",
+  headers: {
+    // your custom headers
+  }
+})
 ```
+
+Each client needs to be configured by its own. The default values are:
+
+| property | type   | default                                   |
+|----------|--------|-------------------------------------------|
+| baseUrl  | string | ""                                        |
+| headers  | object | {  'Content-Type':  'application/json' }  |
+
+If you pass a custom configuration for a single API call with the RequestType object, the configuration is
+merged/overwritten.
+
+````typescript
+await comparisonClient
+  .path("users/me/listing-comparisons/{listingComparisonId}", {
+    listingComparisonId: 1234,
+  })
+  .get({
+    options: {
+      baseUrl: "https://someCustomBaseUrlForThatApi",
+      headers: {
+        // your custom headers
+      },
+      accessToken: "your token",
+    },
+  })
+````
 
 ### Using the client
 

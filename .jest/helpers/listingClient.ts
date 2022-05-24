@@ -12,7 +12,7 @@ export type Listing = {
   make: string;
 };
 
-interface ListingClient extends ClientConfiguration {
+export interface ListingClientConfiguration extends ClientConfiguration {
   'dealers/{dealerId}/listings/{dealerId}': {
     get: () => ResponseType<Listing>;
   };
@@ -34,4 +34,6 @@ interface ListingClient extends ClientConfiguration {
   };
 }
 
-export const listingClient = ApiClient<ListingClient>();
+export const listingClient = ApiClient<ListingClientConfiguration>({
+  baseUrl: 'https://api.automotive.ch/api',
+});

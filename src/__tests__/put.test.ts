@@ -1,13 +1,6 @@
-import { initApiClient } from '../index';
 import { listingClient, mockResolvedOnce } from '../../.jest';
 
 describe('put', () => {
-  beforeEach(() => {
-    initApiClient({
-      baseUrl: 'https://api.automotive.ch/api',
-    });
-  });
-
   it('calls fetch with PUT', async () => {
     mockResolvedOnce({ id: '12345' });
     await listingClient.path('/listings/{listingId}', { listingId: 123 }).put({

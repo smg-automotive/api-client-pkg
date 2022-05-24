@@ -1,4 +1,3 @@
-import { initApiClient } from '../index';
 import {
   Listing,
   listingClient,
@@ -7,12 +6,6 @@ import {
 } from '../../.jest';
 
 describe('get', () => {
-  beforeEach(() => {
-    initApiClient({
-      baseUrl: 'https://api.automotive.ch/api',
-    });
-  });
-
   it('calls fetch with GET', async () => {
     mockResolvedOnce({ make: 'bmw' });
     await listingClient.path('/listings/search').get();

@@ -1,17 +1,17 @@
-import { initApiClient } from '../index';
+import { ApiClient } from '../index';
 import {
   listingClient,
+  ListingClientConfiguration,
   mockFetchFailOnce,
   mockResolvedOnce,
 } from '../../.jest';
 
 describe('ApiClient', () => {
   it('throws if there is no baseUrl', async () => {
+    const throwingClient = ApiClient<ListingClientConfiguration>();
     await expect(async () => {
-      await listingClient.path('/listings/search').get();
-    }).rejects.toThrow(
-      'FetchClient is not configured. Please run initApiClient() or pass a custom baseUrl.'
-    );
+      await throwingClient.path('/listings/search').get();
+    }).rejects.toThrow('FetchClient is not configured. Please pass a baseUrl.');
   });
 
   it('throws if fetch fails', async () => {
@@ -26,9 +26,6 @@ describe('ApiClient', () => {
   });
 
   it('overwrites the configured baseUrl', async () => {
-    initApiClient({
-      baseUrl: 'https://api.automotive.ch/api',
-    });
     mockResolvedOnce({ data: '12345' });
     await listingClient.path('/listings/search').get({
       options: {
@@ -78,14 +75,14 @@ describe('ApiClient', () => {
 
   it('merges the custom header with the configuration', async () => {
     mockResolvedOnce({ data: '12345' });
-    initApiClient({
+    const client = ApiClient<ListingClientConfiguration>({
       baseUrl: 'https://api.automotive.ch/api',
       headers: {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         'Accept-Language': 'fr-CH',
       },
     });
-    await listingClient.path('/listings/search').get({
+    await client.path('/listings/search').get({
       options: {
         headers: {
           // eslint-disable-next-line @typescript-eslint/naming-convention

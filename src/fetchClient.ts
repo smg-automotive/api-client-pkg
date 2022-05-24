@@ -3,12 +3,19 @@ import { ResponseType } from './responseType';
 import { FetchClientConfiguration, RequestOptions } from './index';
 type RequestParameters = Record<string, string | number>;
 
-class FetchClient {
-  private configuration: FetchClientConfiguration = {
+export class FetchClient {
+  private readonly configuration: FetchClientConfiguration = {
     baseUrl: '',
     // eslint-disable-next-line @typescript-eslint/naming-convention
     headers: { 'Content-Type': 'application/json' },
   };
+
+  constructor(configuration: Partial<FetchClientConfiguration> = {}) {
+    this.configuration = {
+      ...this.configuration,
+      ...configuration,
+    };
+  }
 
   private getPath({
     path,
@@ -20,9 +27,7 @@ class FetchClient {
   }) {
     const baseUrl = options?.baseUrl || this.configuration.baseUrl;
     if (!baseUrl) {
-      throw new Error(
-        'FetchClient is not configured. Please run initApiClient() or pass a custom baseUrl.'
-      );
+      throw new Error('FetchClient is not configured. Please pass a baseUrl.');
     }
     return [
       baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl,
@@ -48,13 +53,6 @@ class FetchClient {
       body: data,
     };
   }
-
-  init = (configuration: Partial<FetchClientConfiguration>) => {
-    this.configuration = {
-      ...this.configuration,
-      ...configuration,
-    };
-  };
 
   get = async ({
     path,
@@ -124,5 +122,3 @@ class FetchClient {
     );
   };
 }
-
-export const fetchClient = new FetchClient();

@@ -1,7 +1,7 @@
 import { ResponseType } from './responseType';
 import { replaceParameters } from './pathParameters';
 import { Path } from './path';
-import { fetchClient } from './fetchClient';
+import { FetchClient } from './fetchClient';
 import {
   ClientConfiguration,
   RequestType,
@@ -19,9 +19,12 @@ export interface RequestOptions {
   accessToken?: string;
 }
 
-function StronglyTypedClient<Configuration extends ClientConfiguration>(): {
+function StronglyTypedClient<Configuration extends ClientConfiguration>(
+  configuration: Partial<FetchClientConfiguration> = {}
+): {
   path: Path<Configuration>;
 } {
+  const fetchClient = new FetchClient(configuration);
   return {
     path: (path, params) => {
       const replacedPath = replaceParameters({
@@ -46,15 +49,8 @@ function StronglyTypedClient<Configuration extends ClientConfiguration>(): {
   } as { path: Path<Configuration> };
 }
 
-const initApiClient = (
-  configuration: Partial<FetchClientConfiguration> = {}
-) => {
-  fetchClient.init(configuration);
-};
-
 export {
   StronglyTypedClient as ApiClient,
-  initApiClient,
   ClientConfiguration,
   ResponseType,
   RequestType,
