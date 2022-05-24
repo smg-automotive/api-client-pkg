@@ -11,9 +11,9 @@ npm install @smg-automotive/api-client-pkg
 
 ### Creating a client
 
-Create a new typescript file and define an interface that describes your API. The interface must extend
-from `ClientConfiguration`. The key defines the path to the API (use curly brackets for dynamic parameters) and the
-value defines the available methods for that path.
+Create a new typescript file and define an interface that describes your API. The interface must
+extend `ClientConfiguration`. The key defines the path to the API (use curly brackets for dynamic parameters) and the
+values define available methods for that path.
 
 ```typescript
 import {
@@ -79,14 +79,14 @@ Depending on your client configuration, you are going to get typing for the requ
 parsed and transformed to an object by the client.
 
 ```typescript
-const res = await comparisonClient
+const response = await comparisonClient
   .path("users/me/listing-comparisons/{listingComparisonId}", {
     listingComparisonId: 1234,
   })
   .get()
 
-if (res.ok) {
-  // res.body is typed to ListingComparison
+if (response.ok) {
+  // response.body is typed to ListingComparison
 } else {
   // something failed
 }
@@ -129,10 +129,13 @@ await comparisonClient
 
 ### Error handling
 
-The promise is not rejected if any error occurs on API level. You can check for `res.ok` or the http status code.
+The promise is not rejected if any error occurs on API level (
+see [fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API#differences_from_jquery) documentation for
+reference). You can check for `response.ok` to know whether the request was successful or not and to get typing on the
+body object.
 
 ````typescript
-const res = await comparisonClient
+const response = await comparisonClient
   .path("users/me/listing-comparisons/{listingComparisonId}", {
     listingComparisonId: 1234,
   })
@@ -142,11 +145,11 @@ const res = await comparisonClient
     },
   })
 
-if (res.ok) {
+if (response.ok) {
   // it worked!
 } else {
   // it did not work for some reason
-  if (res.status === 401) {
+  if (response.status === 401) {
     // it did not work because user is not authorized!
   }
 }
