@@ -2,11 +2,7 @@ import { ResponseType } from './responseType';
 import { replaceParameters } from './pathParameters';
 import { Path } from './path';
 import { FetchClient } from './fetchClient';
-import {
-  ClientConfiguration,
-  RequestType,
-  RequestTypeWithBody,
-} from './configuration';
+import { ClientConfiguration, RequestType } from './configuration';
 
 export interface FetchClientConfiguration {
   baseUrl: string;
@@ -54,5 +50,4 @@ export {
   ClientConfiguration,
   ResponseType,
   RequestType,
-  RequestTypeWithBody,
 };

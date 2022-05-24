@@ -3,7 +3,6 @@
 import {
   ResponseType,
   ApiClient,
-  RequestTypeWithBody,
   ClientConfiguration,
   RequestType,
 } from '../../src';
@@ -21,16 +20,16 @@ export interface ListingClientConfiguration extends ClientConfiguration {
   };
   '/listings/{listingId}': {
     delete: () => ResponseType;
-    put: (data: RequestTypeWithBody<Listing>) => ResponseType;
+    put: (data: RequestType<Listing>) => ResponseType;
   };
   'dealers/{dealerId}/listings/{listingId}': {
     delete: () => ResponseType;
   };
   '/listings/create': {
-    post: (data: RequestTypeWithBody<Listing>) => ResponseType;
+    post: (data: RequestType<Listing>) => ResponseType;
   };
   '/calculate': {
-    post: (data: RequestTypeWithBody<null>) => ResponseType;
+    post: (data: RequestType<null>) => ResponseType;
   };
 }
 

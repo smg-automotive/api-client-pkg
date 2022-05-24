@@ -4,18 +4,15 @@ import { ResponseType } from './responseType';
 
 import { RequestOptions } from './index';
 
-export interface RequestType {
+export interface RequestType<T = never> {
   options?: RequestOptions;
-}
-
-export interface RequestTypeWithBody<T = any> extends RequestType {
-  data: T;
+  data?: T;
 }
 
 type Methods = {
   get?: (request: RequestType) => ResponseType<any>;
-  post?: (request: RequestTypeWithBody) => ResponseType<any>;
-  put?: (request: RequestTypeWithBody) => ResponseType<any>;
+  post?: (request: RequestType<any>) => ResponseType<any>;
+  put?: (request: RequestType<any>) => ResponseType<any>;
   delete?: (request: RequestType) => ResponseType<any>;
 };
 

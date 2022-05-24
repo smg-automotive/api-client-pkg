@@ -20,19 +20,18 @@ import {
   ApiClient,
   ClientConfiguration,
   RequestType,
-  RequestTypeWithBody,
   ResponseType,
 } from "@smg-automotive/api-client-pkg"
 
 interface ComparisonClientConfiguration extends ClientConfiguration {
   "users/me/listing-comparisons": {
     post: (
-      request: RequestTypeWithBody<ListingComparison>
+      request: RequestType<ListingComparison>
     ) => ResponseType<ListingComparisonCreateResponse>
   }
   "users/me/listing-comparisons/{listingComparisonId}": {
     put: (
-      request: RequestTypeWithBody<ListingComparison>
+      request: RequestType<ListingComparison>
     ) => ResponseType
     delete: (request: RequestType) => ResponseType
     get: (request: RequestType) => ResponseType<ListingComparison>
