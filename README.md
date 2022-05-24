@@ -46,14 +46,14 @@ interface ComparisonClientConfiguration extends ClientConfiguration {
   "users/me/listing-comparisons": {
     post: (
       request: RequestTypeWithBody<ListingComparison>
-    ) => Promise<ResponseType<ListingComparisonCreateResponse>>
+    ) => ResponseType<ListingComparisonCreateResponse>
   }
   "users/me/listing-comparisons/{listingComparisonId}": {
     put: (
       request: RequestTypeWithBody<ListingComparison>
-    ) => Promise<ResponseType>
-    delete: (request: RequestType) => Promise<ResponseType>
-    get: (request: RequestType) => Promise<ResponseType<ListingComparison>>
+    ) => ResponseType
+    delete: (request: RequestType) => ResponseType
+    get: (request: RequestType) => ResponseType<ListingComparison>
   }
 }
 
@@ -62,7 +62,8 @@ export const comparisonClient = ApiClient<ComparisonClientConfiguration>()
 
 ### Using the client
 
-Depending on your client configuration, you are going to get typing for the request and the response body.
+Depending on your client configuration, you are going to get typing for the request and the response body. The body is
+parsed and transformed to an object by the client.
 
 ```typescript
 const res = await comparisonClient
@@ -71,11 +72,10 @@ const res = await comparisonClient
   })
   .get()
 
-// you can also use res.ok if you do not care about the specific code
-if (res.status === 204) {
+if (res.ok) {
   // res.body is typed to ListingComparison
 } else {
-  // request failed
+  // something failed
 }
 ```
 
@@ -133,11 +133,9 @@ if (res.ok) {
   // it worked!
 } else {
   // it did not work for some reason
-}
-
-if (res.status === 401) {
-  // it did not work because user is not authorized!
-  // res.ok is false
+  if (res.status === 401) {
+    // it did not work because user is not authorized!
+  }
 }
 ````
 

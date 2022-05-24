@@ -13,10 +13,10 @@ export interface RequestTypeWithBody<T = any> extends RequestType {
 }
 
 type Methods = {
-  get?: (request: RequestType) => Promise<ResponseType<any>>;
-  post?: (request: RequestTypeWithBody) => Promise<ResponseType<any>>;
-  put?: (request: RequestTypeWithBody) => Promise<ResponseType<any>>;
-  delete?: (request: RequestType) => Promise<ResponseType<any>>;
+  get?: (request: RequestType) => ResponseType<any>;
+  post?: (request: RequestTypeWithBody) => ResponseType<any>;
+  put?: (request: RequestTypeWithBody) => ResponseType<any>;
+  delete?: (request: RequestType) => ResponseType<any>;
 };
 
 export type ClientConfiguration = Record<string, Methods>;

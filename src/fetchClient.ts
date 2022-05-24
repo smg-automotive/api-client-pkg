@@ -40,14 +40,11 @@ class FetchClient {
     };
   }
 
-  private static async returnData(response: Response): Promise<ResponseType> {
+  private static async returnData<T>(response: Response): ResponseType<T> {
     const text = await response.text();
     const data = text.length > 0 ? JSON.parse(text) : {};
     return {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore status may differ from our types
-      status: response.status,
-      ok: response.ok,
+      ...response,
       body: data,
     };
   }
@@ -65,7 +62,7 @@ class FetchClient {
   }: {
     path: string;
     options?: RequestOptions;
-  }): Promise<ResponseType> => {
+  }): ResponseType => {
     return FetchClient.returnData(
       await fetch(this.getPath({ path, options }), {
         method: 'GET',
@@ -83,7 +80,7 @@ class FetchClient {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     body: any;
     options?: RequestOptions;
-  }): Promise<ResponseType> => {
+  }): ResponseType => {
     return FetchClient.returnData(
       await fetch(this.getPath({ path, options }), {
         method: 'POST',
@@ -102,7 +99,7 @@ class FetchClient {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     body: any;
     options?: RequestOptions;
-  }): Promise<ResponseType> => {
+  }): ResponseType => {
     return FetchClient.returnData(
       await fetch(this.getPath({ path, options }), {
         method: 'PUT',
@@ -118,7 +115,7 @@ class FetchClient {
   }: {
     path: string;
     options?: RequestOptions;
-  }): Promise<ResponseType> => {
+  }): ResponseType => {
     return FetchClient.returnData(
       await fetch(this.getPath({ path, options }), {
         method: 'DELETE',

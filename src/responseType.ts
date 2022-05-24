@@ -1,24 +1,19 @@
-interface BaseResponse {
-  ok: boolean;
-  status: number;
-  body?: unknown;
-  headers?: Record<string, unknown>;
-}
+type Error = {
+  error?: string;
+  message?: string;
+  errors?: Record<string, string>[];
+};
 
-interface ErrorResponse extends BaseResponse {
+interface ErrorResponse extends Omit<Response, 'body'> {
   ok: false;
-  status: 400 | 401 | 403 | 404 | 500;
-  body: {
-    error?: string;
-    message?: string;
-    errors?: Record<string, string>[];
-  };
+  body: Error;
 }
 
-interface SuccessResponse<Body> extends BaseResponse {
+interface SuccessResponse<Body> extends Omit<Response, 'body'> {
   ok: true;
-  status: 200 | 201 | 204;
   body: Body;
 }
 
-export type ResponseType<Body = never> = ErrorResponse | SuccessResponse<Body>;
+export type ResponseType<Body = never> = Promise<
+  ErrorResponse | SuccessResponse<Body>
+>;

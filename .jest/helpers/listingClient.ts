@@ -14,23 +14,23 @@ export type Listing = {
 
 interface ListingClient extends ClientConfiguration {
   'dealers/{dealerId}/listings/{dealerId}': {
-    get: () => Promise<ResponseType<Listing>>;
+    get: () => ResponseType<Listing>;
   };
   '/listings/search': {
-    get: (data?: RequestType) => Promise<ResponseType<Listing>>;
+    get: (data?: RequestType) => ResponseType<Listing>;
   };
   '/listings/{listingId}': {
-    delete: () => Promise<ResponseType>;
-    put: (data: RequestTypeWithBody<Listing>) => Promise<ResponseType>;
+    delete: () => ResponseType;
+    put: (data: RequestTypeWithBody<Listing>) => ResponseType;
   };
   'dealers/{dealerId}/listings/{listingId}': {
-    delete: () => Promise<ResponseType>;
+    delete: () => ResponseType;
   };
   '/listings/create': {
-    post: (data: RequestTypeWithBody<Listing>) => Promise<ResponseType>;
+    post: (data: RequestTypeWithBody<Listing>) => ResponseType;
   };
   '/calculate': {
-    post: (data: RequestTypeWithBody<null>) => Promise<ResponseType>;
+    post: (data: RequestTypeWithBody<null>) => ResponseType;
   };
 }
 
