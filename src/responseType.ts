@@ -4,12 +4,17 @@ type Error = {
   errors?: Record<string, string>[];
 };
 
-interface ErrorResponse extends Omit<Response, 'body'> {
+type LeanResponse = Pick<
+  Response,
+  'headers' | 'ok' | 'redirected' | 'status' | 'statusText' | 'type' | 'url'
+>;
+
+interface ErrorResponse extends LeanResponse {
   ok: false;
   body: Error;
 }
 
-interface SuccessResponse<Body> extends Omit<Response, 'body'> {
+interface SuccessResponse<Body> extends LeanResponse {
   ok: true;
   body: Body;
 }
