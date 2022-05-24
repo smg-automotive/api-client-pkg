@@ -42,7 +42,7 @@ import {
   ResponseType,
 } from "@smg-automotive/api-client-pkg"
 
-interface UserListingComparisonClient extends ClientConfiguration {
+interface ComparisonClientConfiguration extends ClientConfiguration {
   "users/me/listing-comparisons": {
     post: (
       request: RequestTypeWithBody<ListingComparison>
@@ -57,7 +57,7 @@ interface UserListingComparisonClient extends ClientConfiguration {
   }
 }
 
-export const comparisonClient = ApiClient<UserListingComparisonClient>()
+export const comparisonClient = ApiClient<ComparisonClientConfiguration>()
 ```
 
 ### Using the client
