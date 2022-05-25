@@ -169,21 +169,15 @@ this by setting a spy on the created client:
 ````typescript
 import { comparisonClient } from "~/clients/userListingComparison"
 
-jest
-  .spyOn(
-    comparisonClient.path(
-      // note that this path matches the path you want to mock
-      "users/me/listing-comparisons/{listingComparisonId}"
-    ),
-    "get"
-  )
-  .mockReturnValueOnce(
+jest.spyOn(comparisonClient, "path").mockReturnValueOnce({
+  get: jest.fn().mockReturnValueOnce(
     Promise.resolve({
       status: 401,
       body: { error: "Unauthorized" },
       ok: false,
     })
-  )
+  ),
+})
 ````
 
 if you want to overwrite the mock behavior of all **used** api-client functions in your test file, you can also
