@@ -1,20 +1,23 @@
 import { ApiClient } from '../index';
-import { mockFetchFailOnce, mockResolvedOnce } from '../../.jest';
+import {
+  listingClient,
+  ListingClientConfiguration,
+  mockFetchFailOnce,
+  mockResolvedOnce,
+} from '../../.jest';
 
 describe('ApiClient', () => {
   it('throws if there is no baseUrl', async () => {
+    const throwingClient = ApiClient<ListingClientConfiguration>();
     await expect(async () => {
-      await ApiClient.get<{ data: string }>({ path: '/listings/search' });
-    }).rejects.toThrow(
-      'ApiClient is not configured. Please run ApiClient.configure() or pass a custom baseUrl.'
-    );
+      await throwingClient.path('/listings/search').get();
+    }).rejects.toThrow('FetchClient is not configured. Please pass a baseUrl.');
   });
 
   it('throws if fetch fails', async () => {
     mockFetchFailOnce();
     await expect(
-      ApiClient.get<string>({
-        path: '/listings/search',
+      listingClient.path('/listings/search').get({
         options: {
           baseUrl: 'url',
         },
@@ -23,12 +26,8 @@ describe('ApiClient', () => {
   });
 
   it('overwrites the configured baseUrl', async () => {
-    ApiClient.configure({
-      baseUrl: 'https://api.automotive.ch/api',
-    });
     mockResolvedOnce({ data: '12345' });
-    await ApiClient.get<{ data: string }>({
-      path: '/listings/search',
+    await listingClient.path('/listings/search').get({
       options: {
         baseUrl: 'https://petstoreapi.ch',
       },
@@ -41,8 +40,7 @@ describe('ApiClient', () => {
 
   it('removes duplicated slashes', async () => {
     mockResolvedOnce({ data: '12345' });
-    await ApiClient.get<{ data: string }>({
-      path: '/listings/search',
+    await listingClient.path('/listings/search').get({
       options: {
         baseUrl: 'https://petstoreapi.ch/',
       },
@@ -55,8 +53,7 @@ describe('ApiClient', () => {
 
   it('allows to configure a custom header', async () => {
     mockResolvedOnce({ data: '12345' });
-    await ApiClient.get<{ data: string }>({
-      path: '/listings/search',
+    await listingClient.path('/listings/search').get({
       options: {
         baseUrl: 'https://petstoreapi.ch',
         headers: {
@@ -78,15 +75,14 @@ describe('ApiClient', () => {
 
   it('merges the custom header with the configuration', async () => {
     mockResolvedOnce({ data: '12345' });
-    ApiClient.configure({
+    const client = ApiClient<ListingClientConfiguration>({
       baseUrl: 'https://api.automotive.ch/api',
       headers: {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         'Accept-Language': 'fr-CH',
       },
     });
-    await ApiClient.get<{ data: string }>({
-      path: '/listings/search',
+    await client.path('/listings/search').get({
       options: {
         headers: {
           // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -105,8 +101,7 @@ describe('ApiClient', () => {
 
   it('creates an authorization header if access token is passed', async () => {
     mockResolvedOnce({ data: '12345' });
-    await ApiClient.get<{ data: string }>({
-      path: '/listings/search',
+    await listingClient.path('/listings/search').get({
       options: {
         baseUrl: 'https://petstoreapi.ch',
         accessToken: 'abcdef',
@@ -117,6 +112,42 @@ describe('ApiClient', () => {
       expect.objectContaining({
         headers: expect.objectContaining({ Authorization: 'Bearer abcdef' }),
       })
+    );
+  });
+
+  it('throws if no parameters are passed', async () => {
+    await expect(async () => {
+      await listingClient
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        .path('dealers/{dealerId}/listings/{listingId}')
+        .delete();
+    }).rejects.toThrow();
+  });
+
+  it('throws if a parameter is missing', async () => {
+    await expect(async () => {
+      await listingClient
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        .path('dealers/{dealerId}/listings/{listingId}', { listingId: 123 })
+        .delete();
+    }).rejects.toThrow(
+      'Parameter dealerId missing. Expected parameters are: dealerId, listingId'
+    );
+  });
+
+  it('replaces the parameter placeholders with the data', async () => {
+    mockResolvedOnce({});
+    await listingClient
+      .path('dealers/{dealerId}/listings/{listingId}', {
+        dealerId: 123,
+        listingId: 456,
+      })
+      .delete();
+    expect(fetch).toHaveBeenCalledWith(
+      expect.stringContaining('dealers/123/listings/456'),
+      expect.any(Object)
     );
   });
 });
