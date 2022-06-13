@@ -36,7 +36,7 @@
     "jest": "28.1.1",
     "prettier": "2.6.2",
     "rimraf": "3.0.2",
-    "rollup": "2.75.5",
+    "rollup": "2.75.6",
     "rollup-plugin-dts": "4.2.2",
     "rollup-plugin-peer-deps-external": "2.2.4",
     "semantic-release": "19.0.3",
