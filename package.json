@@ -34,7 +34,7 @@
     "@smg-automotive/eslint-config": "1.3.1",
     "@types/jest": "28.1.1",
     "jest": "28.1.1",
-    "prettier": "2.6.2",
+    "prettier": "2.7.0",
     "rimraf": "3.0.2",
     "rollup": "2.75.6",
     "rollup-plugin-dts": "4.2.2",
