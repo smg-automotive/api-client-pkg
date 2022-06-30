@@ -17,7 +17,7 @@ export const replaceParameters = ({
   path: string;
   params?: Record<string, string | number>;
 }) => {
-  const parameters = path.match(/{(.*?)}/g) || [];
+  const parameters = path.match(/{([A-Za-z0-9_-]+)}/g) || [];
 
   if (parameters.length === 0) {
     return path;
