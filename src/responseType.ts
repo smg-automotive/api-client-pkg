@@ -1,7 +1,15 @@
+type BaseError = {
+  code: string;
+  message: string;
+};
+
+type FieldError = BaseError & { property: string };
+
 type Error = {
-  error?: string;
-  message?: string;
-  errors?: Record<string, string>[];
+  code: string;
+  message: string;
+  fieldErrors?: FieldError[];
+  globalErrors?: BaseError[];
 };
 
 type LeanResponse = Pick<
