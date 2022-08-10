@@ -25,6 +25,7 @@ interface SuccessResponse<Body> extends LeanResponse {
   body: Body;
 }
 
-export type ResponseType<RequestData = unknown, Body = never> = Promise<
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ResponseType<RequestData = any, Body = never> = Promise<
   ErrorResponse<RequestData> | SuccessResponse<Body>
 >;

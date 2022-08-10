@@ -10,10 +10,10 @@ export type RequestType<T = never> = {
 };
 
 type Methods = {
-  get?: (request: RequestType) => ResponseType<any>;
-  post?: (request: RequestType<any>) => ResponseType<any>;
-  put?: (request: RequestType<any>) => ResponseType<any>;
-  delete?: (request: RequestType) => ResponseType<any>;
+  get?: (request: RequestType) => ResponseType<never, any>;
+  post?: (request: RequestType<any>) => ResponseType<any, any>;
+  put?: (request: RequestType<any>) => ResponseType<any, any>;
+  delete?: (request: RequestType) => ResponseType<never, any>;
 };
 
 export type ClientConfiguration = Record<string, Methods>;
