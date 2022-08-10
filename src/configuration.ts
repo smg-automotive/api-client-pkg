@@ -4,10 +4,10 @@ import { ResponseType } from './responseType';
 
 import { RequestOptions } from './index';
 
-export interface RequestType<T = never> {
+export type RequestType<T = never> = {
   options?: RequestOptions;
   data?: T;
-}
+};
 
 type Methods = {
   get?: (request: RequestType) => ResponseType<any>;
