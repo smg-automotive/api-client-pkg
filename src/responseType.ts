@@ -25,6 +25,6 @@ interface SuccessResponse<Body> extends LeanResponse {
   body: Body;
 }
 
-export type ResponseType<Body = never, RequestData = never> = Promise<
+export type ResponseType<RequestData = unknown, Body = never> = Promise<
   ErrorResponse<RequestData> | SuccessResponse<Body>
 >;
