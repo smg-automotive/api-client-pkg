@@ -45,7 +45,9 @@ export class FetchClient {
     };
   }
 
-  private static async returnData<T>(response: Response): ResponseType<T> {
+  private static async returnData<T>(
+    response: Response
+  ): ResponseType<unknown, T> {
     const text = await response.text();
     const data = text.length > 0 ? JSON.parse(text) : {};
     const { headers, ok, redirected, status, statusText, type, url } = response;
