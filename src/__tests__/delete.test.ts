@@ -1,4 +1,5 @@
-import { listingClient, mockResolvedOnce } from '../../.jest';
+import { listingClient } from '../../.jest/helpers/listingClient';
+import { mockResolvedOnce } from '../../.jest/helpers/fetch';
 
 describe('delete', () => {
   it('calls fetch with DELETE', async () => {

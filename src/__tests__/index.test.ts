@@ -2,9 +2,8 @@ import { ApiClient } from '../index';
 import {
   listingClient,
   ListingClientConfiguration,
-  mockFetchFailOnce,
-  mockResolvedOnce,
-} from '../../.jest';
+} from '../../.jest/helpers/listingClient';
+import { mockFetchFailOnce, mockResolvedOnce } from '../../.jest/helpers/fetch';
 
 describe('ApiClient', () => {
   it('throws if there is no baseUrl', async () => {
