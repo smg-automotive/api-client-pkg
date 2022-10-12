@@ -1,7 +1,6 @@
 import { ResponseType } from './responseType';
 
 import { FetchClientConfiguration, RequestOptions } from './index';
-type RequestParameters = Record<string, string | number>;
 
 export class FetchClient {
   private readonly configuration: FetchClientConfiguration = {
