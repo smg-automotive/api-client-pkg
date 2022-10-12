@@ -168,8 +168,8 @@ describe('ApiClient', () => {
     await listingClient.path('/listings/search').get({
       options: {
         baseUrl: 'https://petstoreapi.ch/',
-        searchParams: { test: 'hereIAm' },
       },
+      searchParams: { test: 'hereIAm' },
     });
     expect(fetch).toHaveBeenCalledWith(
       'https://petstoreapi.ch/listings/search?test=hereIAm',

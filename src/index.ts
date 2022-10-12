@@ -9,11 +9,10 @@ export interface FetchClientConfiguration {
   headers: Record<string, string>;
 }
 
-export interface RequestOptions<SearchParamsType = never> {
+export interface RequestOptions {
   baseUrl?: string;
   headers?: Record<string, string>;
   accessToken?: string;
-  searchParams?: SearchParamsType;
 }
 
 function StronglyTypedClient<Configuration extends ClientConfiguration>(
@@ -29,8 +28,8 @@ function StronglyTypedClient<Configuration extends ClientConfiguration>(
         params: params || {},
       });
       return {
-        get: ({ options } = { options: {} }) => {
-          return fetchClient.get({ path: replacedPath, options });
+        get: ({ options, searchParams } = { options: {} }) => {
+          return fetchClient.get({ path: replacedPath, options, searchParams });
         },
         post: ({ data, options } = { data: {}, options: {} }) => {
           return fetchClient.post({ path: replacedPath, body: data, options });

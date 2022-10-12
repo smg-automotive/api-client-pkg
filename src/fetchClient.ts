@@ -20,10 +20,11 @@ export class FetchClient {
   private getPath({
     path,
     options,
+    searchParams,
   }: {
     path: string;
-    params?: RequestParameters;
     options?: RequestOptions;
+    searchParams?: Record<string, string>;
   }) {
     const baseUrl = options?.baseUrl || this.configuration.baseUrl;
     if (!baseUrl) {
@@ -34,9 +35,9 @@ export class FetchClient {
       path.startsWith('/') ? path.slice(1) : path,
     ].join('/');
 
-    const searchParams = new URLSearchParams(options?.searchParams).toString();
-    const queryString = `${searchParams ? '?' : ''}${
-      searchParams ? searchParams : ''
+    const urlSearchParams = new URLSearchParams(searchParams).toString();
+    const queryString = `${urlSearchParams ? '?' : ''}${
+      urlSearchParams ? urlSearchParams : ''
     }`;
 
     return `${normalizedPath}${queryString}`;
@@ -73,12 +74,14 @@ export class FetchClient {
   get = async ({
     path,
     options,
+    searchParams,
   }: {
     path: string;
     options?: RequestOptions;
+    searchParams?: Record<string, string>;
   }): ResponseType => {
     return FetchClient.returnData(
-      await fetch(this.getPath({ path, options }), {
+      await fetch(this.getPath({ path, options, searchParams }), {
         method: 'GET',
         headers: this.getHeaders(options),
       })
