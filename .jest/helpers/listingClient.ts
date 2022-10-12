@@ -9,12 +9,18 @@ export type Listing = {
   make: string;
 };
 
+interface DummySearchParams {
+  test: string;
+}
+
 export interface ListingClientConfiguration extends ClientConfiguration {
   'dealers/{dealerId}/listings/{dealerId}': {
     get: () => ResponseType<never, Listing>;
   };
   '/listings/search': {
-    get: (data?: RequestType) => ResponseType<never, Listing>;
+    get: (
+      data?: RequestType<never, DummySearchParams>
+    ) => ResponseType<never, Listing>;
   };
   '/listings/{listingId}': {
     delete: () => ResponseType;

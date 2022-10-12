@@ -9,11 +9,11 @@ export interface FetchClientConfiguration {
   headers: Record<string, string>;
 }
 
-export interface RequestOptions {
+export interface RequestOptions<SearchParamsType = never> {
   baseUrl?: string;
   headers?: Record<string, string>;
   accessToken?: string;
-  searchParams?: Record<string, string>;
+  searchParams?: SearchParamsType;
 }
 
 function StronglyTypedClient<Configuration extends ClientConfiguration>(
