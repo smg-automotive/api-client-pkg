@@ -13,6 +13,7 @@ export interface RequestOptions {
   baseUrl?: string;
   headers?: Record<string, string>;
   accessToken?: string;
+  searchParams?: Record<string, string>;
 }
 
 function StronglyTypedClient<Configuration extends ClientConfiguration>(

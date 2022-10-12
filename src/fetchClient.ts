@@ -29,10 +29,17 @@ export class FetchClient {
     if (!baseUrl) {
       throw new Error('FetchClient is not configured. Please pass a baseUrl.');
     }
-    return [
+    const normalizedPath = [
       baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl,
       path.startsWith('/') ? path.slice(1) : path,
     ].join('/');
+
+    const searchParams = new URLSearchParams(options?.searchParams).toString();
+    const querySting = `${searchParams ? '?' : ''}${
+      searchParams ? searchParams : ''
+    }`;
+
+    return `${normalizedPath}${querySting}`;
   }
 
   private getHeaders(options?: RequestOptions): Record<string, string> {
