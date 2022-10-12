@@ -35,11 +35,11 @@ export class FetchClient {
     ].join('/');
 
     const searchParams = new URLSearchParams(options?.searchParams).toString();
-    const querySting = `${searchParams ? '?' : ''}${
+    const queryString = `${searchParams ? '?' : ''}${
       searchParams ? searchParams : ''
     }`;
 
-    return `${normalizedPath}${querySting}`;
+    return `${normalizedPath}${queryString}`;
   }
 
   private getHeaders(options?: RequestOptions): Record<string, string> {
