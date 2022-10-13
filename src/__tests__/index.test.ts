@@ -149,4 +149,31 @@ describe('ApiClient', () => {
       expect.any(Object)
     );
   });
+
+  it('ignores searchParams when not passed', async () => {
+    mockResolvedOnce({ data: '12345' });
+    await listingClient.path('/listings/search').get({
+      options: {
+        baseUrl: 'https://petstoreapi.ch/',
+      },
+    });
+    expect(fetch).toHaveBeenCalledWith(
+      'https://petstoreapi.ch/listings/search',
+      expect.any(Object)
+    );
+  });
+
+  it('adds searchParams', async () => {
+    mockResolvedOnce({ data: '12345' });
+    await listingClient.path('/listings/search').get({
+      options: {
+        baseUrl: 'https://petstoreapi.ch/',
+      },
+      searchParams: { test: 'hereIAm' },
+    });
+    expect(fetch).toHaveBeenCalledWith(
+      'https://petstoreapi.ch/listings/search?test=hereIAm',
+      expect.any(Object)
+    );
+  });
 });

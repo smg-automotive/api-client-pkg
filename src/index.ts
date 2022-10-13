@@ -28,8 +28,8 @@ function StronglyTypedClient<Configuration extends ClientConfiguration>(
         params: params || {},
       });
       return {
-        get: ({ options } = { options: {} }) => {
-          return fetchClient.get({ path: replacedPath, options });
+        get: ({ options, searchParams } = { options: {} }) => {
+          return fetchClient.get({ path: replacedPath, options, searchParams });
         },
         post: ({ data, options } = { data: {}, options: {} }) => {
           return fetchClient.post({ path: replacedPath, body: data, options });

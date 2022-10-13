@@ -4,9 +4,10 @@ import { ResponseType } from './responseType';
 
 import { RequestOptions } from './index';
 
-export type RequestType<T = never> = {
+export type RequestType<DataType = never, SearchParamsType = never> = {
   options?: RequestOptions;
-  data?: T;
+  data?: DataType;
+  searchParams?: SearchParamsType;
 };
 
 type Methods = {
