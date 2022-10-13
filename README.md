@@ -21,57 +21,55 @@ import {
   ClientConfiguration,
   RequestType,
   ResponseType,
-} from "@smg-automotive/api-client-pkg"
+} from '@smg-automotive/api-client-pkg';
 
 interface ComparisonClientConfiguration extends ClientConfiguration {
-  "users/me/listing-comparisons": {
+  'users/me/listing-comparisons': {
     get: () => ResponseType<ListingComparison[]>;
     post: (
       request: RequestType<ListingComparison>
-    ) => ResponseType<ListingComparisonCreateResponse>
-  }
-  "users/me/listing-comparisons/{listingComparisonId}": {
-    put: (
-      request: RequestType<ListingComparison>
-    ) => ResponseType
-    delete: (request: RequestType) => ResponseType
-    get: (request: RequestType) => ResponseType<ListingComparison>
-  }
+    ) => ResponseType<ListingComparisonCreateResponse>;
+  };
+  'users/me/listing-comparisons/{listingComparisonId}': {
+    put: (request: RequestType<ListingComparison>) => ResponseType;
+    delete: (request: RequestType) => ResponseType;
+    get: (request: RequestType) => ResponseType<ListingComparison>;
+  };
 }
 
 export const comparisonClient = ApiClient<ComparisonClientConfiguration>({
-  baseUrl: "https://api.automotive.ch/api",
+  baseUrl: 'https://api.automotive.ch/api',
   headers: {
     // your custom headers
-  }
-})
+  },
+});
 ```
 
 Each client needs to be configured by its own. The default values are:
 
-| property | type   | default                                   |
-|----------|--------|-------------------------------------------|
-| baseUrl  | string | ""                                        |
-| headers  | object | {  'Content-Type':  'application/json' }  |
+| property | type   | default                                |
+| -------- | ------ | -------------------------------------- |
+| baseUrl  | string | ""                                     |
+| headers  | object | { 'Content-Type': 'application/json' } |
 
 If you pass a custom configuration for a single API call with the RequestType object, the configuration is
 merged/overwritten.
 
-````typescript
+```typescript
 await comparisonClient
-  .path("users/me/listing-comparisons/{listingComparisonId}", {
+  .path('users/me/listing-comparisons/{listingComparisonId}', {
     listingComparisonId: 1234,
   })
   .get({
     options: {
-      baseUrl: "https://someCustomBaseUrlForThatApi",
+      baseUrl: 'https://someCustomBaseUrlForThatApi',
       headers: {
         // your custom headers
       },
-      accessToken: "your token",
+      accessToken: 'your token',
     },
-  })
-````
+  });
+```
 
 ### Using the client
 
@@ -80,10 +78,10 @@ parsed and transformed to an object by the client.
 
 ```typescript
 const response = await comparisonClient
-  .path("users/me/listing-comparisons/{listingComparisonId}", {
+  .path('users/me/listing-comparisons/{listingComparisonId}', {
     listingComparisonId: 1234,
   })
-  .get()
+  .get();
 
 if (response.ok) {
   // response.body is typed to ListingComparison
@@ -98,15 +96,15 @@ the api client replaces those occurrences automatically for you.
 ```typescript
 await comparisonClient
   // this will fail with "Property 'listingComparisonId' is missing"
-  .path("users/me/listing-comparisons/{listingComparisonId}", {})
-  .get()
+  .path('users/me/listing-comparisons/{listingComparisonId}', {})
+  .get();
 
 await comparisonClient
   // this will call fetch with https://yourBaseUrl.ch/users/me/listing-comparisons/1234
-  .path("users/me/listing-comparisons/{listingComparisonId}", {
+  .path('users/me/listing-comparisons/{listingComparisonId}', {
     listingComparisonId: 1234,
   })
-  .get()
+  .get();
 ```
 
 ### Authorization
@@ -114,18 +112,18 @@ await comparisonClient
 You can pass `accessToken` to the request options if you are talking to a protected API. The client will automatically
 set the header with a Bearer token.
 
-````typescript
+```typescript
 // fetch is called with the header { Authorization: `Bearer ${accessToken}` }
 await comparisonClient
-  .path("users/me/listing-comparisons/{listingComparisonId}", {
+  .path('users/me/listing-comparisons/{listingComparisonId}', {
     listingComparisonId: 1234,
   })
   .get({
     options: {
       accessToken: authHeader.accessToken,
     },
-  })
-````
+  });
+```
 
 ### Error handling
 
@@ -134,16 +132,16 @@ see [fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API#differenc
 reference). You can check for `response.ok` to know whether the request was successful or not and to get typing on the
 body object.
 
-````typescript
+```typescript
 const response = await comparisonClient
-  .path("users/me/listing-comparisons/{listingComparisonId}", {
+  .path('users/me/listing-comparisons/{listingComparisonId}', {
     listingComparisonId: 1234,
   })
   .get({
     options: {
       accessToken: authHeader.accessToken,
     },
-  })
+  });
 
 if (response.ok) {
   // it worked!
@@ -153,56 +151,56 @@ if (response.ok) {
     // it did not work because user is not authorized!
   }
 }
-````
+```
 
 ### Testing
 
 Create a file in the `__mocks__` directory called `@smg-automotive/api-client-pkg.ts` with the following content:
 
-````typescript
-export { ApiClient } from "@smg-automotive/api-client-pkg/__mocks__/index"
-````
+```typescript
+export { ApiClient } from '@smg-automotive/api-client-pkg/dist/__mocks__/index';
+```
 
 By default, all the API calls will succeed and return an empty body. If you want to return a specific value you can do
 this by setting a spy on the created client:
 
-````typescript
-import { comparisonClient } from "~/clients/userListingComparison"
+```typescript
+import { comparisonClient } from '~/clients/userListingComparison';
 
-jest.spyOn(comparisonClient, "path").mockReturnValueOnce({
+jest.spyOn(comparisonClient, 'path').mockReturnValueOnce({
   get: jest.fn().mockReturnValueOnce(
     Promise.resolve({
       status: 401,
-      body: { error: "Unauthorized" },
+      body: { error: 'Unauthorized' },
       ok: false,
     })
   ),
-})
-````
+});
+```
 
 if you want to overwrite the mock behavior of all **used** api-client functions in your test file, you can also
 use `jest.mock` for it:
 
-````typescript
-jest.mock("@smg-automotive/api-client-pkg", () => ({
+```typescript
+jest.mock('@smg-automotive/api-client-pkg', () => ({
   ApiClient: () => ({
     path: () => {
       return {
         get: jest.fn().mockReturnValue(
           Promise.resolve({
             status: 401,
-            body: { error: "Unauthorized" },
+            body: { error: 'Unauthorized' },
             ok: false,
           })
         ),
         post: jest.fn(),
         put: jest.fn(),
         delete: jest.fn(),
-      }
+      };
     },
   }),
-}))
-````
+}));
+```
 
 ## Development
 
