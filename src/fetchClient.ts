@@ -1,7 +1,6 @@
 import { ResponseType } from './responseType';
 
 import { FetchClientConfiguration, RequestOptions } from './index';
-type RequestParameters = Record<string, string | number>;
 
 export class FetchClient {
   private readonly configuration: FetchClientConfiguration = {
@@ -20,19 +19,27 @@ export class FetchClient {
   private getPath({
     path,
     options,
+    searchParams,
   }: {
     path: string;
-    params?: RequestParameters;
     options?: RequestOptions;
+    searchParams?: Record<string, string>;
   }) {
     const baseUrl = options?.baseUrl || this.configuration.baseUrl;
     if (!baseUrl) {
       throw new Error('FetchClient is not configured. Please pass a baseUrl.');
     }
-    return [
+    const normalizedPath = [
       baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl,
       path.startsWith('/') ? path.slice(1) : path,
     ].join('/');
+
+    const urlSearchParams = new URLSearchParams(searchParams).toString();
+    const queryString = `${urlSearchParams ? '?' : ''}${
+      urlSearchParams ? urlSearchParams : ''
+    }`;
+
+    return `${normalizedPath}${queryString}`;
   }
 
   private getHeaders(options?: RequestOptions): Record<string, string> {
@@ -66,12 +73,14 @@ export class FetchClient {
   get = async ({
     path,
     options,
+    searchParams,
   }: {
     path: string;
     options?: RequestOptions;
+    searchParams?: Record<string, string>;
   }): ResponseType => {
     return FetchClient.returnData(
-      await fetch(this.getPath({ path, options }), {
+      await fetch(this.getPath({ path, options, searchParams }), {
         method: 'GET',
         headers: this.getHeaders(options),
       })
