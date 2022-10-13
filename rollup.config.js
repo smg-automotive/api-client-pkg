@@ -9,13 +9,15 @@ const packageJson = require('./package.json');
 export default [
   {
     input: '__mocks__/index.ts',
-    output: [
-      {
-        file: 'dist/__mocks__/index.js',
-        format: 'cjs',
-      },
+    output: [{ file: 'dist/__mocks__/index.js', format: 'cjs' }],
+    plugins: [
+      peerDepsExternal(),
+      resolve(),
+      commonjs(),
+      typescript({
+        tsconfig: './tsconfig.build.json',
+      }),
     ],
-    plugins: [typescript({ tsconfig: './tsconfig.build.json' })],
   },
   {
     input: 'src/index.ts',
