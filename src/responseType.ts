@@ -1,5 +1,3 @@
-import { PaginatedResponse } from './pagination';
-
 type BaseError = {
   code: string;
   message: string;
