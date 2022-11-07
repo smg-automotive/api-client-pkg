@@ -71,6 +71,22 @@ await comparisonClient
   });
 ```
 
+#### Paginated requests
+
+Backend APIs may implement standardized paginated endpoints.  
+You can use the following helper types to type the request and response
+for an API providing paginated content.
+
+```typescript
+interface VersionsClientConfiguration extends ClientConfiguration {
+  'versions/search': {
+    post: (
+      request: RequestType<PaginatedQuery<VersionBody>, never>
+    ) => ResponseType<never, PaginatedResponse<Version>>;
+  };
+}
+```
+
 ### Using the client
 
 Depending on your client configuration, you are going to get typing for the request and the response body. The body is

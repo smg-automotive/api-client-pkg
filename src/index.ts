@@ -1,6 +1,7 @@
 import { ResponseType } from './responseType';
 import { replaceParameters } from './pathParameters';
 import { Path } from './path';
+import { PaginatedQuery, PaginatedResponse } from './pagination';
 import { FetchClient } from './fetchClient';
 import { ClientConfiguration, RequestType } from './configuration';
 
@@ -50,4 +51,6 @@ export {
   ClientConfiguration,
   ResponseType,
   RequestType,
+  PaginatedQuery,
+  PaginatedResponse,
 };
