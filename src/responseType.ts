@@ -1,11 +1,15 @@
+import { Path } from './utils';
+
 type BaseError = {
   code: string;
   message: string;
 };
 
-type FieldError<RequestData> = BaseError & { property: keyof RequestData };
+type FieldError<RequestData extends object> = BaseError & {
+  property: Path<RequestData>;
+};
 
-type Error<RequestData> = BaseError & {
+type Error<RequestData extends object> = BaseError & {
   fieldErrors?: FieldError<RequestData>[];
   globalErrors?: BaseError[];
 };
@@ -15,7 +19,7 @@ type LeanResponse = Pick<
   'headers' | 'ok' | 'redirected' | 'status' | 'statusText' | 'type' | 'url'
 >;
 
-interface ErrorResponse<RequestData> extends LeanResponse {
+interface ErrorResponse<RequestData extends object> extends LeanResponse {
   ok: false;
   body: Error<RequestData>;
 }
@@ -25,7 +29,7 @@ interface SuccessResponse<Body> extends LeanResponse {
   body: Body;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ResponseType<RequestData = any, Body = never> = Promise<
-  ErrorResponse<RequestData> | SuccessResponse<Body>
->;
+export type ResponseType<
+  RequestData extends object = object,
+  Body = never
+> = Promise<ErrorResponse<RequestData> | SuccessResponse<Body>>;
