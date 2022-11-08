@@ -3,17 +3,20 @@ type BaseError = {
   message: string;
 };
 
-type Path<ObjectType extends object> = {
-  [Key in keyof ObjectType & (string | number)]: ObjectType[Key] extends object
+type Path<ObjectType extends Record<string, unknown>> = {
+  [Key in keyof ObjectType & (string | number)]: ObjectType[Key] extends Record<
+    string,
+    unknown
+  >
     ? `${Key}` | `${Key}.${Path<ObjectType[Key]>}`
     : `${Key}`;
 }[keyof ObjectType & (string | number)];
 
-type FieldError<RequestData extends object> = BaseError & {
+type FieldError<RequestData extends Record<string, unknown>> = BaseError & {
   property: Path<RequestData>;
 };
 
-type Error<RequestData extends object> = BaseError & {
+type Error<RequestData extends Record<string, unknown>> = BaseError & {
   fieldErrors?: FieldError<RequestData>[];
   globalErrors?: BaseError[];
 };
@@ -23,7 +26,8 @@ type LeanResponse = Pick<
   'headers' | 'ok' | 'redirected' | 'status' | 'statusText' | 'type' | 'url'
 >;
 
-interface ErrorResponse<RequestData extends object> extends LeanResponse {
+interface ErrorResponse<RequestData extends Record<string, unknown>>
+  extends LeanResponse {
   ok: false;
   body: Error<RequestData>;
 }
@@ -34,6 +38,6 @@ interface SuccessResponse<Body> extends LeanResponse {
 }
 
 export type ResponseType<
-  RequestData extends object = object,
+  RequestData extends Record<string, unknown> = Record<string, unknown>,
   Body = never
 > = Promise<ErrorResponse<RequestData> | SuccessResponse<Body>>;
