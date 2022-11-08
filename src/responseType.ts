@@ -3,12 +3,11 @@ type BaseError = {
   message: string;
 };
 
-type TupleKeys<T extends ReadonlyArray<unknown>> = Exclude<
-  keyof T,
-  keyof unknown[]
->;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type TupleKeys<T extends ReadonlyArray<any>> = Exclude<keyof T, keyof any[]>;
 
-type IsTuple<T extends ReadonlyArray<unknown>> = number extends T['length']
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type IsTuple<T extends ReadonlyArray<any>> = number extends T['length']
   ? false
   : true;
 
