@@ -1,8 +1,8 @@
 import {
-  ResponseType,
   ApiClient,
   ClientConfiguration,
   RequestType,
+  ResponseType,
 } from '../../src';
 
 export type Listing = {
