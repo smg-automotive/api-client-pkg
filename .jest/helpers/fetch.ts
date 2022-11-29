@@ -1,6 +1,6 @@
 import { fetchMock } from '../setup/fetchMock';
 
-export const mockResolvedOnce = (value: any) => {
+export const mockResolvedOnce = (value: unknown) => {
   fetchMock.mockReturnValueOnce(
     Promise.resolve({
       status: 200,
