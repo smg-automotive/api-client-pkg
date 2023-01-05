@@ -19,12 +19,13 @@ type LeanResponse = Pick<
   'headers' | 'ok' | 'redirected' | 'status' | 'statusText' | 'type' | 'url'
 >;
 
-interface ErrorResponse<RequestData extends object> extends LeanResponse {
+export interface ErrorResponse<RequestData extends object>
+  extends LeanResponse {
   ok: false;
   body: Error<RequestData>;
 }
 
-interface SuccessResponse<Body> extends LeanResponse {
+export interface SuccessResponse<Body> extends LeanResponse {
   ok: true;
   body: Body;
 }
