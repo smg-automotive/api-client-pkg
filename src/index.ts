@@ -1,4 +1,4 @@
-import { ResponseType } from './responseType';
+import { ErrorResponse, ResponseType, SuccessResponse } from './responseType';
 import { replaceParameters } from './pathParameters';
 import { Path } from './path';
 import {
@@ -55,6 +55,8 @@ export {
   ClientConfiguration,
   ResponseType,
   RequestType,
+  SuccessResponse,
+  ErrorResponse,
   PaginatedQuery,
   PaginatedResponse,
   PaginationQuery,
