@@ -5,18 +5,18 @@ import { ClientConfiguration } from '.';
 
 export type DataSanitizer<T> = (data: Partial<T>) => T;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type ApiCall = (...args: any) => ResponseType<any, any>;
+
 export type Sanitizers<Configuration extends ClientConfiguration> = {
-  [path in keyof RemoveIndex<Configuration>]?: {
-    [method in keyof Configuration[path]]?: Configuration[path][method] extends (
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ...args: any
-    ) => unknown
-      ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ReturnType<Configuration[path][method]> extends ResponseType<any, any>
-        ? DataSanitizer<
-            UnwrapResponseType<ReturnType<Configuration[path][method]>>
-          >
-        : never
+  // For every path in the configuration
+  [Path in keyof RemoveIndex<Configuration>]?: {
+    // and every method of that path that is an api call
+    [Method in keyof Configuration[Path]]?: Configuration[Path][Method] extends ApiCall
+      ? // sanitize the response body
+        DataSanitizer<
+          UnwrapResponseType<ReturnType<Configuration[Path][Method]>>
+        >
       : never;
   };
 };
