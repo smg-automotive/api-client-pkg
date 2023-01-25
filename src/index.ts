@@ -1,3 +1,4 @@
+import { Sanitizers } from './sanitizers';
 import { ErrorResponse, ResponseType, SuccessResponse } from './responseType';
 import { replaceParameters } from './pathParameters';
 import { Path } from './path';
@@ -14,6 +15,11 @@ export interface FetchClientConfiguration {
   headers: Record<string, string>;
 }
 
+interface ApiClientConfiguration<Configuration extends ClientConfiguration>
+  extends FetchClientConfiguration {
+  sanitizers: Sanitizers<Configuration>;
+}
+
 export interface RequestOptions {
   baseUrl?: string;
   headers?: Record<string, string>;
@@ -21,7 +27,7 @@ export interface RequestOptions {
 }
 
 function StronglyTypedClient<Configuration extends ClientConfiguration>(
-  configuration: Partial<FetchClientConfiguration> = {}
+  configuration: Partial<ApiClientConfiguration<Configuration>> = {}
 ): {
   path: Path<Configuration>;
 } {
@@ -32,18 +38,40 @@ function StronglyTypedClient<Configuration extends ClientConfiguration>(
         path: path.toString(),
         params: params || {},
       });
+
+      const pathSanitizers = configuration.sanitizers?.[path];
+
       return {
         get: ({ options, searchParams } = { options: {} }) => {
-          return fetchClient.get({ path: replacedPath, options, searchParams });
+          return fetchClient.get({
+            path: replacedPath,
+            options,
+            searchParams,
+            sanitizer: pathSanitizers?.get,
+          });
         },
         post: ({ data, options } = { data: {}, options: {} }) => {
-          return fetchClient.post({ path: replacedPath, body: data, options });
+          return fetchClient.post({
+            path: replacedPath,
+            body: data,
+            options,
+            sanitizer: pathSanitizers?.post,
+          });
         },
         put: ({ data, options } = { data: {}, options: {} }) => {
-          return fetchClient.put({ path: replacedPath, body: data, options });
+          return fetchClient.put({
+            path: replacedPath,
+            body: data,
+            options,
+            sanitizer: pathSanitizers?.put,
+          });
         },
         delete: ({ options } = { options: {} }) => {
-          return fetchClient.delete({ path: replacedPath, options });
+          return fetchClient.delete({
+            path: replacedPath,
+            options,
+            sanitizer: pathSanitizers?.delete,
+          });
         },
       };
     },

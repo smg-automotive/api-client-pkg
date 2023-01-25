@@ -35,8 +35,26 @@ export interface ListingClientConfiguration extends ClientConfiguration {
   '/calculate': {
     post: (data: RequestType<null>) => ResponseType<Listing>;
   };
+  '/listings/{listingId}/unsanitized': {
+    get: () => ResponseType<object, Listing>;
+    post: (data: RequestType<Listing>) => ResponseType<object, Listing>;
+    put: (data: RequestType<Listing>) => ResponseType<object, Listing>;
+    delete: () => ResponseType<object, Listing>;
+  };
 }
+
+const sanitizeListing = ({ make }: Partial<Listing>): Listing => ({
+  make: make || 'default make',
+});
 
 export const listingClient = ApiClient<ListingClientConfiguration>({
   baseUrl: 'https://api.automotive.ch/api',
+  sanitizers: {
+    '/listings/{listingId}/unsanitized': {
+      get: sanitizeListing,
+      post: sanitizeListing,
+      put: sanitizeListing,
+      delete: sanitizeListing,
+    },
+  },
 });

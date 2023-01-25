@@ -14,4 +14,13 @@ describe('put', () => {
       expect.objectContaining({ method: 'PUT' })
     );
   });
+
+  it('applies a sanitizer', async () => {
+    mockResolvedOnce({});
+    const response = await listingClient
+      .path('/listings/{listingId}/unsanitized', { listingId: 1 })
+      .put({});
+
+    expect(response.body).toEqual({ make: 'default make' });
+  });
 });

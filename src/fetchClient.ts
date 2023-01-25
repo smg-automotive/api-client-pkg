@@ -1,3 +1,4 @@
+import { DataSanitizer } from './sanitizers';
 import { ResponseType } from './responseType';
 
 import { FetchClientConfiguration, RequestOptions } from './index';
@@ -53,7 +54,8 @@ export class FetchClient {
   }
 
   private static async returnData<T>(
-    response: Response
+    response: Response,
+    sanitizer?: DataSanitizer<T>
   ): ResponseType<object, T> {
     const text = await response.text();
     const data = text.length > 0 ? JSON.parse(text) : {};
@@ -66,77 +68,89 @@ export class FetchClient {
       statusText,
       type,
       url,
-      body: data,
+      body: sanitizer ? sanitizer(data) : data,
     };
   }
 
-  get = async ({
+  get = async <T>({
     path,
     options,
     searchParams,
+    sanitizer,
   }: {
     path: string;
     options?: RequestOptions;
     searchParams?: Record<string, string>;
-  }): ResponseType => {
+    sanitizer?: DataSanitizer<T>;
+  }): ResponseType<object, T> => {
     return FetchClient.returnData(
       await fetch(this.getPath({ path, options, searchParams }), {
         method: 'GET',
         headers: this.getHeaders(options),
-      })
+      }),
+      sanitizer
     );
   };
 
-  post = async ({
+  post = async <T>({
     path,
     body,
     options,
+    sanitizer,
   }: {
     path: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     body: any;
     options?: RequestOptions;
-  }): ResponseType => {
+    sanitizer?: DataSanitizer<T>;
+  }): ResponseType<object, T> => {
     return FetchClient.returnData(
       await fetch(this.getPath({ path, options }), {
         method: 'POST',
         headers: this.getHeaders(options),
         body: body && JSON.stringify(body),
-      })
+      }),
+      sanitizer
     );
   };
 
-  put = async ({
+  put = async <T>({
     path,
     body,
     options,
+    sanitizer,
   }: {
     path: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     body: any;
     options?: RequestOptions;
-  }): ResponseType => {
+    sanitizer?: DataSanitizer<T>;
+  }): ResponseType<object, T> => {
     return FetchClient.returnData(
       await fetch(this.getPath({ path, options }), {
         method: 'PUT',
         headers: this.getHeaders(options),
         body: body && JSON.stringify(body),
-      })
+      }),
+      sanitizer
     );
   };
 
-  delete = async ({
+  delete = async <T>({
     path,
     options,
+    sanitizer,
   }: {
     path: string;
     options?: RequestOptions;
-  }): ResponseType => {
+    sanitizer?: DataSanitizer<T>;
+  }): ResponseType<object, T> => {
     return FetchClient.returnData(
       await fetch(this.getPath({ path, options }), {
         method: 'DELETE',
         headers: this.getHeaders(options),
-      })
+      }),
+      sanitizer
     );
   };
 }
