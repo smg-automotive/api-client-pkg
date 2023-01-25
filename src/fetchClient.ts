@@ -1,3 +1,4 @@
+import { DataSanitizer } from './sanitizers';
 import { ResponseType } from './responseType';
 
 import { FetchClientConfiguration, RequestOptions } from './index';
@@ -54,7 +55,7 @@ export class FetchClient {
 
   private static async returnData<T>(
     response: Response,
-    sanitizer?: (data: Partial<T>) => T
+    sanitizer?: DataSanitizer<T>
   ): ResponseType<object, T> {
     const text = await response.text();
     const data = text.length > 0 ? JSON.parse(text) : {};
@@ -80,7 +81,7 @@ export class FetchClient {
     path: string;
     options?: RequestOptions;
     searchParams?: Record<string, string>;
-    sanitizer?: (data: Partial<T>) => T;
+    sanitizer?: DataSanitizer<T>;
   }): ResponseType<object, T> => {
     return FetchClient.returnData(
       await fetch(this.getPath({ path, options, searchParams }), {
@@ -101,7 +102,7 @@ export class FetchClient {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     body: any;
     options?: RequestOptions;
-    sanitizer?: (data: Partial<T>) => T;
+    sanitizer?: DataSanitizer<T>;
   }): ResponseType<object, T> => {
     return FetchClient.returnData(
       await fetch(this.getPath({ path, options }), {
@@ -123,7 +124,7 @@ export class FetchClient {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     body: any;
     options?: RequestOptions;
-    sanitizer?: (data: Partial<T>) => T;
+    sanitizer?: DataSanitizer<T>;
   }): ResponseType<object, T> => {
     return FetchClient.returnData(
       await fetch(this.getPath({ path, options }), {
@@ -142,7 +143,7 @@ export class FetchClient {
   }: {
     path: string;
     options?: RequestOptions;
-    sanitizer?: (data: Partial<T>) => T;
+    sanitizer?: DataSanitizer<T>;
   }): ResponseType<object, T> => {
     return FetchClient.returnData(
       await fetch(this.getPath({ path, options }), {
