@@ -73,7 +73,7 @@ await comparisonClient
 
 #### Paginated requests
 
-Backend APIs may implement standardized paginated endpoints.  
+Backend APIs may implement standardized paginated endpoints.
 You can use the following helper types to type the request and response
 for an API providing paginated content.
 
@@ -140,6 +140,44 @@ await comparisonClient
     },
   });
 ```
+
+### Data sanitization
+
+In case you need to sanitize data for a certain path or method you can pass `sanitizers` via the client configuration:
+
+```typescript
+type Image = { s3Key: string };
+
+type Listing = {
+  images: Image[];
+  make: string;
+  model: string;
+};
+
+const sanitizeListing = ({ images, make, model }: Listing) => ({
+  images: images || [],
+  make: make || 'default make',
+  model: model || 'default model',
+});
+
+interface ListingClientConfiguration extends ClientConfiguration {
+  '/listings/{listingId}': {
+    get: () => ResponseType<object, Listing>;
+  };
+}
+
+export const listingClientWithSanitizers =
+  ApiClient<ListingClientConfiguration>({
+    baseUrl: 'https://api.automotive.ch/api',
+    sanitizers: {
+      '/listings/{listingId}': {
+        get: sanitizeListing,
+      },
+    },
+  });
+```
+
+This would apply the sanitizer for evert `get` request on `/listing/{listingId}` path. It can be useful when you want to ensure some basic and sane defaults that cannot be guaranteed by the backend service.
 
 ### Error handling
 
