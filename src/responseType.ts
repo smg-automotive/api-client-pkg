@@ -30,6 +30,14 @@ export interface SuccessResponse<Body> extends LeanResponse {
   body: Body;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type UnwrapResponseUnion<T extends Awaited<ResponseType<any, any>>> =
+  T extends SuccessResponse<infer Body> ? Body : never;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type UnwrapResponseType<T extends ResponseType<any, any>> =
+  UnwrapResponseUnion<Awaited<T>>;
+
 export type ResponseType<
   RequestData extends object = object,
   Body = never
