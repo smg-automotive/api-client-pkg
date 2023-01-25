@@ -177,7 +177,7 @@ export const listingClientWithSanitizers =
   });
 ```
 
-This would apply the sanitizer for evert `get` request on `/listing/{listingId}` path. It can be useful when you want to ensure some basic and sane defaults that cannot be guaranteed by the backend service.
+This would apply the sanitizer for every `get` request on `/listing/{listingId}` path. It can be useful when you want to ensure some basic and sane defaults that cannot be guaranteed by the backend service.
 
 ### Error handling
 
