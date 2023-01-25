@@ -11,6 +11,15 @@ describe('get', () => {
     );
   });
 
+  it('applies a sanitizer', async () => {
+    mockResolvedOnce({});
+    const response = await listingClient
+      .path('/listings/{listingId}/unsanitized', { listingId: 1 })
+      .get();
+
+    expect(response.body).toEqual({ make: 'default make' });
+  });
+
   it('extracts the json value of the response', async () => {
     mockResolvedOnce({ make: 'bmw' });
     const { body } = await listingClient.path('/listings/search').get();

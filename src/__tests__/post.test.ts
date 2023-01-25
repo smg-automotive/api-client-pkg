@@ -21,4 +21,13 @@ describe('post', () => {
       expect.objectContaining({ body: null })
     );
   });
+
+  it('applies a sanitizer', async () => {
+    mockResolvedOnce({});
+    const response = await listingClient
+      .path('/listings/{listingId}/unsanitized', { listingId: 1 })
+      .post({});
+
+    expect(response.body).toEqual({ make: 'default make' });
+  });
 });
