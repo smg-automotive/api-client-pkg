@@ -14,6 +14,11 @@ export default [
     plugins: [typescript({ tsconfig: '__mocks__/tsconfig.json' })],
   },
   {
+    input: 'dist/__mocks__/types/index.d.ts',
+    output: [{ file: 'dist/__mocks__/index.d.ts', format: 'esm' }],
+    plugins: [dts()],
+  },
+  {
     input: 'src/index.ts',
     output: [
       {
