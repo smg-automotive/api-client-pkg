@@ -1,3 +1,4 @@
+import { SortedQuery, SortParams, SortQuery } from './sort';
 import { Sanitizers } from './sanitizers';
 import { ErrorResponse, ResponseType, SuccessResponse } from './responseType';
 import { replaceParameters } from './pathParameters';
@@ -9,6 +10,11 @@ import {
 } from './pagination';
 import { FetchClient } from './fetchClient';
 import { ClientConfiguration, RequestType } from './configuration';
+
+export interface SortedAndPaginatedQuery<Query, SortType>
+  extends PaginatedQuery<Query> {
+  sort: SortQuery<SortType>;
+}
 
 export interface FetchClientConfiguration {
   baseUrl: string;
@@ -88,4 +94,7 @@ export {
   PaginatedQuery,
   PaginatedResponse,
   PaginationQuery,
+  SortQuery,
+  SortParams,
+  SortedQuery,
 };
