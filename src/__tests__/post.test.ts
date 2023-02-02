@@ -1,5 +1,5 @@
-import { listingClient } from '../../.jest/helpers/listingClient';
-import { mockResolvedOnce } from '../../.jest/helpers/fetch';
+import { listingClient } from '.jest/helpers/listingClient';
+import { mockResolvedOnce } from '.jest/helpers/fetch';
 
 describe('post', () => {
   it('calls fetch with POST', async () => {
