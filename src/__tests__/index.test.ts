@@ -1,9 +1,10 @@
-import { ApiClient } from '../index';
 import {
   listingClient,
   ListingClientConfiguration,
-} from '../../.jest/helpers/listingClient';
-import { mockFetchFailOnce, mockResolvedOnce } from '../../.jest/helpers/fetch';
+} from '.jest/helpers/listingClient';
+import { mockFetchFailOnce, mockResolvedOnce } from '.jest/helpers/fetch';
+
+import { ApiClient } from '../index';
 
 describe('ApiClient', () => {
   it('throws if there is no baseUrl', async () => {

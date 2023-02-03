@@ -1,9 +1,4 @@
-import {
-  ApiClient,
-  ClientConfiguration,
-  RequestType,
-  ResponseType,
-} from '../../src';
+import { ApiClient, ClientConfiguration, RequestType, ResponseType } from 'src';
 
 export type Listing = {
   make: string;
