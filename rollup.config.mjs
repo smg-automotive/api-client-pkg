@@ -1,11 +1,10 @@
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
+import dts from 'rollup-plugin-dts';
 import typescript from '@rollup/plugin-typescript';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 
-const dts = require('rollup-plugin-dts').default;
-
-const packageJson = require('./package.json');
+import packageJson from './package.json' assert { type: 'json' };
 
 export default [
   {
@@ -14,9 +13,9 @@ export default [
     plugins: [typescript({ tsconfig: '__mocks__/tsconfig.json' })],
   },
   {
-    input: 'dist/__mocks__/types/index.d.ts',
+    input: '__mocks__/index.ts',
     output: [{ file: 'dist/__mocks__/index.d.ts', format: 'esm' }],
-    plugins: [dts()],
+    plugins: [dts({ tsconfig: '__mocks__/tsconfig.json' })],
   },
   {
     input: 'src/index.ts',
@@ -34,14 +33,14 @@ export default [
     ],
     plugins: [
       peerDepsExternal(),
-      resolve(),
+      resolve({ moduleDirectories: ['.', 'node_modules'] }),
       commonjs(),
       typescript({ tsconfig: './tsconfig.build.json' }),
     ],
     external: ['react', 'react-dom'],
   },
   {
-    input: 'dist/esm/types/index.d.ts',
+    input: 'src/index.ts',
     output: [{ file: 'dist/index.d.ts', format: 'esm' }],
     plugins: [dts()],
   },
