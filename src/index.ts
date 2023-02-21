@@ -1,4 +1,4 @@
-import { SortedQuery, SortParams, SortQuery, SortOrderParams } from './sort';
+import { SortedQuery, SortOrderParams, SortParams, SortQuery } from './sort';
 import { Sanitizers } from './sanitizers';
 import { ErrorResponse, ResponseType, SuccessResponse } from './responseType';
 import { replaceParameters } from './pathParameters';
@@ -95,7 +95,7 @@ export {
   PaginatedResponse,
   PaginationQuery,
   SortQuery,
+  SortOrderParams,
   SortParams,
   SortedQuery,
-  SortOrderParams
 };
