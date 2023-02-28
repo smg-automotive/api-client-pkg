@@ -4,8 +4,8 @@ export enum SortOrderParams {
 }
 
 export type SortParams<T> = {
-  sortOrder?: SortOrderParams;
-  sortType?: T;
+  order: SortOrderParams;
+  type: T;
 };
 
 export type SortQuery<T> = Array<SortParams<T>>;

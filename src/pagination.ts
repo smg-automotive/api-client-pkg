@@ -14,8 +14,8 @@ export type PaginatedResponse<ContentType> = PaginationResponseData & {
 };
 
 export type PaginationQuery = {
-  page: number;
-  size: number;
+  page?: number;
+  size?: number;
 };
 
 export type PaginatedQuery<QueryType> = {
