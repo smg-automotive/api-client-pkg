@@ -57,19 +57,24 @@ export class FetchClient {
     response: Response,
     sanitizer?: DataSanitizer<T>
   ): ResponseType<object, T> {
-    const text = await response.text();
-    const data = text.length > 0 ? JSON.parse(text) : {};
-    const { headers, ok, redirected, status, statusText, type, url } = response;
-    return {
-      headers,
-      ok,
-      redirected,
-      status,
-      statusText,
-      type,
-      url,
-      body: sanitizer ? sanitizer(data) : data,
-    };
+    try {
+      const text = await response.text();
+      const data = text.length > 0 ? JSON.parse(text) : {};
+      const { headers, ok, redirected, status, statusText, type, url } = response;
+      return {
+        headers,
+        ok,
+        redirected,
+        status,
+        statusText,
+        type,
+        url,
+        body: sanitizer ? sanitizer(data) : data,
+      };
+    } catch (error) {
+      console.error(`Error while parsing response: ${error.message}`);
+      throw error;
+    }
   }
 
   get = async <T>({
