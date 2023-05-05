@@ -94,7 +94,7 @@ export class FetchClient {
 
   post = async <T>({
     path,
-    body,
+    body: originalBody,
     options,
     sanitizer,
   }: {
@@ -104,11 +104,20 @@ export class FetchClient {
     options?: RequestOptions;
     sanitizer?: DataSanitizer<T>;
   }): ResponseType<object, T> => {
+    const headers = this.getHeaders(options);
+    let body = originalBody && JSON.stringify(originalBody);
+
+    // Form data needs to be plain with no content type set
+    if (originalBody instanceof FormData) {
+      delete headers['Content-Type'];
+      body = originalBody;
+    }
+
     return FetchClient.returnData(
       await fetch(this.getPath({ path, options }), {
         method: 'POST',
-        headers: this.getHeaders(options),
-        body: body && JSON.stringify(body),
+        headers,
+        body,
       }),
       sanitizer
     );
