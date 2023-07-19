@@ -14,7 +14,7 @@ export interface ListingClientConfiguration extends ClientConfiguration {
   };
   '/listings/search': {
     get: (
-      data?: RequestType<never, DummySearchParams>
+      data?: RequestType<never, DummySearchParams>,
     ) => ResponseType<never, Listing>;
   };
   '/listings/{listingId}': {
