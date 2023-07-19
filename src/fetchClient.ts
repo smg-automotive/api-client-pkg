@@ -55,7 +55,7 @@ export class FetchClient {
 
   private static async returnData<T>(
     response: Response,
-    sanitizer?: DataSanitizer<T>
+    sanitizer?: DataSanitizer<T>,
   ): ResponseType<object, T> {
     const text = await response.text();
     const data = text.length > 0 ? JSON.parse(text) : {};
@@ -88,7 +88,7 @@ export class FetchClient {
         method: 'GET',
         headers: this.getHeaders(options),
       }),
-      sanitizer
+      sanitizer,
     );
   };
 
@@ -119,7 +119,7 @@ export class FetchClient {
         headers,
         body,
       }),
-      sanitizer
+      sanitizer,
     );
   };
 
@@ -141,7 +141,7 @@ export class FetchClient {
         headers: this.getHeaders(options),
         body: body && JSON.stringify(body),
       }),
-      sanitizer
+      sanitizer,
     );
   };
 
@@ -159,7 +159,7 @@ export class FetchClient {
         method: 'DELETE',
         headers: this.getHeaders(options),
       }),
-      sanitizer
+      sanitizer,
     );
   };
 }
