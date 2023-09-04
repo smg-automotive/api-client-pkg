@@ -1,5 +1,5 @@
 import { DataSanitizer } from './sanitizers';
-import { ErrorResponse, ResponseType, SuccessResponse } from './responseType';
+import { ResponseType } from './responseType';
 
 import { FetchClientConfiguration, RequestOptions } from './index';
 
