@@ -55,7 +55,7 @@ export class FetchClient {
 
   private static async buildResponseDataObject<BodyType>(
     response: Response,
-    body: BodyType
+    body: BodyType,
   ) {
     const { headers, ok, redirected, status, statusText, type, url } = response;
 
@@ -73,14 +73,14 @@ export class FetchClient {
 
   private static async returnData<BodyType>(
     response: Response,
-    sanitizer?: DataSanitizer<BodyType>
+    sanitizer?: DataSanitizer<BodyType>,
   ): ResponseType<object, BodyType> {
     const text = await response.text();
     if (text.length === 0) {
       return FetchClient.buildResponseDataObject(
         response,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        {} as unknown as any
+        {} as unknown as any,
       );
     }
 
@@ -88,14 +88,14 @@ export class FetchClient {
       const parsedBody = JSON.parse(text);
       return FetchClient.buildResponseDataObject(
         response,
-        sanitizer ? sanitizer(parsedBody) : parsedBody
+        sanitizer ? sanitizer(parsedBody) : parsedBody,
       );
     } catch (_error) {
       const { status, statusText, url } = response;
       throw new Error(
         `Could not parse the response of the following request ${JSON.stringify(
-          { url, status, statusText }
-        )}`
+          { url, status, statusText },
+        )}`,
       );
     }
   }
@@ -116,7 +116,7 @@ export class FetchClient {
         method: 'GET',
         headers: this.getHeaders(options),
       }),
-      sanitizer
+      sanitizer,
     );
   };
 
@@ -147,7 +147,7 @@ export class FetchClient {
         headers,
         body,
       }),
-      sanitizer
+      sanitizer,
     );
   };
 
@@ -169,7 +169,7 @@ export class FetchClient {
         headers: this.getHeaders(options),
         body: body && JSON.stringify(body),
       }),
-      sanitizer
+      sanitizer,
     );
   };
 
@@ -187,7 +187,7 @@ export class FetchClient {
         method: 'DELETE',
         headers: this.getHeaders(options),
       }),
-      sanitizer
+      sanitizer,
     );
   };
 }
