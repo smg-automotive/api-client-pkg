@@ -90,8 +90,15 @@ export class FetchClient {
         response,
         sanitizer ? sanitizer(parsedBody) : parsedBody,
       );
-    } catch (_error) {
+    } catch (error) {
       const { status, statusText, url } = response;
+      if (
+        error instanceof Error &&
+        error.message.trim() !== 'Unexpected token < in JSON at position 0'
+      ) {
+        throw error;
+      }
+
       throw new Error(
         `Could not parse the response of the following request ${JSON.stringify(
           { url, status, statusText },
