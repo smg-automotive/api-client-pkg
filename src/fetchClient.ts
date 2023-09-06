@@ -1,11 +1,5 @@
 import { DataSanitizer } from './sanitizers';
-import {
-  ErrorResponse,
-  ResponseType,
-  SuccessResponse,
-  UnwrapResponseType,
-  UnwrapResponseUnion,
-} from './responseType';
+import { ErrorResponse, ResponseType, SuccessResponse } from './responseType';
 
 import { FetchClientConfiguration, RequestOptions } from './index';
 
