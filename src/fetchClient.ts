@@ -1,5 +1,5 @@
 import { DataSanitizer } from './sanitizers';
-import { ResponseType } from './responseType';
+import { ErrorResponse, ResponseType, SuccessResponse } from './responseType';
 
 import { FetchClientConfiguration, RequestOptions } from './index';
 
@@ -53,23 +53,71 @@ export class FetchClient {
     };
   }
 
-  private static async returnData<T>(
+  private static async buildResponseDataObject<
+    ResponseData,
+    RequestData extends object,
+  >(
     response: Response,
-    sanitizer?: DataSanitizer<T>,
-  ): ResponseType<object, T> {
-    const text = await response.text();
-    const data = text.length > 0 ? JSON.parse(text) : {};
+    passedBody: (
+      | ErrorResponse<RequestData>
+      | SuccessResponse<ResponseData>
+    )['body'],
+  ): ResponseType<RequestData, ResponseData> {
     const { headers, ok, redirected, status, statusText, type, url } = response;
-    return {
+    const baseResponse = {
       headers,
-      ok,
       redirected,
       status,
       statusText,
       type,
       url,
-      body: sanitizer ? sanitizer(data) : data,
     };
+
+    if (ok) {
+      return {
+        ok: true,
+        body: passedBody as SuccessResponse<ResponseData>['body'],
+        ...baseResponse,
+      };
+    }
+
+    return {
+      ok: false,
+      body: passedBody as ErrorResponse<RequestData>['body'],
+      ...baseResponse,
+    };
+  }
+
+  private static async returnData<ResponseData, RequestData extends object>(
+    response: Response,
+    sanitizer?: DataSanitizer<ResponseData>,
+  ): ResponseType<RequestData, ResponseData> {
+    const text = await response.text();
+    if (text.length === 0) {
+      return FetchClient.buildResponseDataObject(response, {} as ResponseData);
+    }
+
+    try {
+      const parsedBody: ResponseData = JSON.parse(text);
+      return FetchClient.buildResponseDataObject(
+        response,
+        sanitizer ? sanitizer(parsedBody) : parsedBody,
+      );
+    } catch (error) {
+      const { status, statusText, url } = response;
+      if (
+        error instanceof Error &&
+        error.message.trim() !== 'Unexpected token < in JSON at position 0'
+      ) {
+        throw error;
+      }
+
+      throw new Error(
+        `Could not parse the response of the following request ${JSON.stringify(
+          { url, status, statusText },
+        )}`,
+      );
+    }
   }
 
   get = async <T>({
