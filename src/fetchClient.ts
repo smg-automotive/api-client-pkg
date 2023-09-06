@@ -1,5 +1,11 @@
 import { DataSanitizer } from './sanitizers';
-import { ResponseType } from './responseType';
+import {
+  ErrorResponse,
+  ResponseType,
+  SuccessResponse,
+  UnwrapResponseType,
+  UnwrapResponseUnion,
+} from './responseType';
 
 import { FetchClientConfiguration, RequestOptions } from './index';
 
@@ -53,39 +59,52 @@ export class FetchClient {
     };
   }
 
-  private static async buildResponseDataObject<BodyType>(
+  private static async buildResponseDataObject<
+    ResponseData,
+    RequestData extends object,
+  >(
     response: Response,
-    body: BodyType,
-  ) {
+    passedBody: (
+      | ErrorResponse<RequestData>
+      | SuccessResponse<ResponseData>
+    )['body'],
+  ): ResponseType<RequestData, ResponseData> {
     const { headers, ok, redirected, status, statusText, type, url } = response;
-
-    return {
+    const baseResponse = {
       headers,
       redirected,
       status,
       statusText,
       type,
       url,
-      body,
-      ok,
+    };
+
+    if (ok) {
+      return {
+        ok: true,
+        body: passedBody as SuccessResponse<ResponseData>['body'],
+        ...baseResponse,
+      };
+    }
+
+    return {
+      ok: false,
+      body: passedBody as ErrorResponse<RequestData>['body'],
+      ...baseResponse,
     };
   }
 
-  private static async returnData<BodyType>(
+  private static async returnData<ResponseData, RequestData extends object>(
     response: Response,
-    sanitizer?: DataSanitizer<BodyType>,
-  ): ResponseType<object, BodyType> {
+    sanitizer?: DataSanitizer<ResponseData>,
+  ): ResponseType<RequestData, ResponseData> {
     const text = await response.text();
     if (text.length === 0) {
-      return FetchClient.buildResponseDataObject(
-        response,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        {} as unknown as any,
-      );
+      return FetchClient.buildResponseDataObject(response, {} as ResponseData);
     }
 
     try {
-      const parsedBody = JSON.parse(text);
+      const parsedBody: ResponseData = JSON.parse(text);
       return FetchClient.buildResponseDataObject(
         response,
         sanitizer ? sanitizer(parsedBody) : parsedBody,
