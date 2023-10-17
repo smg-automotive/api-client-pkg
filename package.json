@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/smg-automotive/api-client-pkg#readme",
   "devDependencies": {
-    "@rollup/plugin-commonjs": "25.0.5",
+    "@rollup/plugin-commonjs": "25.0.7",
     "@rollup/plugin-node-resolve": "15.2.3",
     "@rollup/plugin-typescript": "11.1.5",
     "@smg-automotive/eslint-config": "4.0.14",
