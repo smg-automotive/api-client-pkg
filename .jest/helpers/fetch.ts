@@ -8,7 +8,7 @@ export const mockResolvedOnce = (value: unknown) => {
       text: () => {
         return Promise.resolve(JSON.stringify(value));
       },
-    }),
+    })
   );
 };
 
@@ -26,9 +26,9 @@ export const mockApiFailOnce = () => {
         return Promise.resolve(
           JSON.stringify({
             message: 'Wrong data format',
-          }),
+          })
         );
       },
-    }),
+    })
   );
 };

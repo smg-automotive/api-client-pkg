@@ -7,7 +7,7 @@ describe('get', () => {
     await listingClient.path('/listings/search').get();
     expect(fetch).toHaveBeenCalledWith(
       'https://api.automotive.ch/api/listings/search',
-      expect.objectContaining({ method: 'GET' }),
+      expect.objectContaining({ method: 'GET' })
     );
   });
 

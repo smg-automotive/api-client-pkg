@@ -40,5 +40,5 @@ export type UnwrapResponseType<T extends ResponseType<any, any>> =
 
 export type ResponseType<
   RequestData extends object = object,
-  Body = never,
+  Body = never
 > = Promise<ErrorResponse<RequestData> | SuccessResponse<Body>>;

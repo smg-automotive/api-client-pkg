@@ -21,7 +21,7 @@ describe('ApiClient', () => {
         options: {
           baseUrl: 'url',
         },
-      }),
+      })
     ).rejects.toThrow();
   });
 
@@ -34,7 +34,7 @@ describe('ApiClient', () => {
     });
     expect(fetch).toHaveBeenCalledWith(
       'https://petstoreapi.ch/listings/search',
-      expect.any(Object),
+      expect.any(Object)
     );
   });
 
@@ -47,7 +47,7 @@ describe('ApiClient', () => {
     });
     expect(fetch).toHaveBeenCalledWith(
       'https://petstoreapi.ch/listings/search',
-      expect.any(Object),
+      expect.any(Object)
     );
   });
 
@@ -69,7 +69,7 @@ describe('ApiClient', () => {
       expect.objectContaining({
         // eslint-disable-next-line @typescript-eslint/naming-convention
         headers: { 'Content-Type': 'text/xml', 'Accept-Language': 'fr-CH' },
-      }),
+      })
     );
   });
 
@@ -95,7 +95,7 @@ describe('ApiClient', () => {
       expect.objectContaining({
         // eslint-disable-next-line @typescript-eslint/naming-convention
         headers: { 'Content-Type': 'text/xml', 'Accept-Language': 'fr-CH' },
-      }),
+      })
     );
   });
 
@@ -111,7 +111,7 @@ describe('ApiClient', () => {
       'https://petstoreapi.ch/listings/search',
       expect.objectContaining({
         headers: expect.objectContaining({ Authorization: 'Bearer abcdef' }),
-      }),
+      })
     );
   });
 
@@ -133,7 +133,7 @@ describe('ApiClient', () => {
         .path('dealers/{dealerId}/listings/{listingId}', { listingId: 123 })
         .delete();
     }).rejects.toThrow(
-      'Parameter dealerId missing. Expected parameters are: dealerId, listingId',
+      'Parameter dealerId missing. Expected parameters are: dealerId, listingId'
     );
   });
 
@@ -147,7 +147,7 @@ describe('ApiClient', () => {
       .delete();
     expect(fetch).toHaveBeenCalledWith(
       expect.stringContaining('dealers/123/listings/456'),
-      expect.any(Object),
+      expect.any(Object)
     );
   });
 
@@ -160,7 +160,7 @@ describe('ApiClient', () => {
     });
     expect(fetch).toHaveBeenCalledWith(
       'https://petstoreapi.ch/listings/search',
-      expect.any(Object),
+      expect.any(Object)
     );
   });
 
@@ -174,7 +174,7 @@ describe('ApiClient', () => {
     });
     expect(fetch).toHaveBeenCalledWith(
       'https://petstoreapi.ch/listings/search?test=hereIAm',
-      expect.any(Object),
+      expect.any(Object)
     );
   });
 });

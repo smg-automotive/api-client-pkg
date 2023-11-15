@@ -11,7 +11,7 @@ describe('put', () => {
     });
     expect(fetch).toHaveBeenCalledWith(
       'https://api.automotive.ch/api/listings/123',
-      expect.objectContaining({ method: 'PUT' }),
+      expect.objectContaining({ method: 'PUT' })
     );
   });
 

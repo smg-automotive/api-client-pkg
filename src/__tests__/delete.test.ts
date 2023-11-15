@@ -9,7 +9,7 @@ describe('delete', () => {
       .delete();
     expect(fetch).toHaveBeenCalledWith(
       expect.any(String),
-      expect.objectContaining({ method: 'DELETE' }),
+      expect.objectContaining({ method: 'DELETE' })
     );
   });
 
