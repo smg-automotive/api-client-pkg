@@ -55,13 +55,13 @@ export class FetchClient {
 
   private static async buildResponseDataObject<
     ResponseData,
-    RequestData extends object
+    RequestData extends object,
   >(
     response: Response,
     passedBody: (
       | ErrorResponse<RequestData>
       | SuccessResponse<ResponseData>
-    )['body']
+    )['body'],
   ): ResponseType<RequestData, ResponseData> {
     const { headers, ok, redirected, status, statusText, type, url } = response;
     const baseResponse = {
@@ -90,7 +90,7 @@ export class FetchClient {
 
   private static async returnData<ResponseData, RequestData extends object>(
     response: Response,
-    sanitizer?: DataSanitizer<ResponseData>
+    sanitizer?: DataSanitizer<ResponseData>,
   ): ResponseType<RequestData, ResponseData> {
     const text = await response.text();
     if (text.length === 0) {
@@ -101,21 +101,21 @@ export class FetchClient {
       const parsedBody: ResponseData = JSON.parse(text);
       return FetchClient.buildResponseDataObject(
         response,
-        sanitizer ? sanitizer(parsedBody) : parsedBody
+        sanitizer ? sanitizer(parsedBody) : parsedBody,
       );
     } catch (error) {
       const { status, statusText, url } = response;
       if (error instanceof Error) {
         return FetchClient.buildResponseDataObject(
           { ...response, ok: false },
-          {} as ResponseData
+          {} as ResponseData,
         );
       }
 
       throw new Error(
         `Could not parse the response of the following request ${JSON.stringify(
-          { url, status, statusText, text }
-        )}`
+          { url, status, statusText, text },
+        )}`,
       );
     }
   }
@@ -136,7 +136,7 @@ export class FetchClient {
         method: 'GET',
         headers: this.getHeaders(options),
       }),
-      sanitizer
+      sanitizer,
     );
   };
 
@@ -167,7 +167,7 @@ export class FetchClient {
         headers,
         body,
       }),
-      sanitizer
+      sanitizer,
     );
   };
 
@@ -189,7 +189,7 @@ export class FetchClient {
         headers: this.getHeaders(options),
         body: body && JSON.stringify(body),
       }),
-      sanitizer
+      sanitizer,
     );
   };
 
@@ -207,7 +207,7 @@ export class FetchClient {
         method: 'DELETE',
         headers: this.getHeaders(options),
       }),
-      sanitizer
+      sanitizer,
     );
   };
 }

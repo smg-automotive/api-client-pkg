@@ -33,7 +33,7 @@ export interface RequestOptions {
 }
 
 function StronglyTypedClient<Configuration extends ClientConfiguration>(
-  configuration: Partial<ApiClientConfiguration<Configuration>> = {}
+  configuration: Partial<ApiClientConfiguration<Configuration>> = {},
 ): {
   path: Path<Configuration>;
 } {

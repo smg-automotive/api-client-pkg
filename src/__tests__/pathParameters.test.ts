@@ -3,7 +3,7 @@ import { replaceParameters } from '../pathParameters';
 describe('#replaceParameters', () => {
   it('returns the same string if no curly brackets are used', () => {
     expect(replaceParameters({ path: 'listing/search' })).toEqual(
-      'listing/search'
+      'listing/search',
     );
   });
 
@@ -12,7 +12,7 @@ describe('#replaceParameters', () => {
       replaceParameters({
         path: 'listing/{listingId}',
         params: { listingId: 123 },
-      })
+      }),
     ).toEqual('listing/123');
   });
 
@@ -21,7 +21,7 @@ describe('#replaceParameters', () => {
       replaceParameters({
         path: 'dealer/{dealerId}/listing/{listingId}',
         params: { dealerId: 111, listingId: 123 },
-      })
+      }),
     ).toEqual('dealer/111/listing/123');
   });
 
@@ -30,7 +30,7 @@ describe('#replaceParameters', () => {
       replaceParameters({
         path: 'dealer/{dealerId}/listing/{listingId}',
         params: { listingId: 123 },
-      })
+      }),
     ).toThrow(/Parameter dealerId missing/);
   });
 
@@ -38,7 +38,7 @@ describe('#replaceParameters', () => {
     expect(() =>
       replaceParameters({
         path: 'dealer/{dealerId}/listing/{listingId}',
-      })
+      }),
     ).toThrow(/Expected parameters are: dealerId, listingId/);
   });
 });

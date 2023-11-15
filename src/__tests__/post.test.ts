@@ -9,7 +9,7 @@ describe('post', () => {
       .post({ data: { make: 'bmw' } });
     expect(fetch).toHaveBeenCalledWith(
       'https://api.automotive.ch/api/listings/create',
-      expect.objectContaining({ method: 'POST' })
+      expect.objectContaining({ method: 'POST' }),
     );
   });
 
@@ -18,7 +18,7 @@ describe('post', () => {
     await listingClient.path('/calculate').post({ data: null });
     expect(fetch).toHaveBeenCalledWith(
       expect.stringContaining('calculate'),
-      expect.objectContaining({ body: null })
+      expect.objectContaining({ body: null }),
     );
   });
 
