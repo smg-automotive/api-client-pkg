@@ -105,27 +105,41 @@ export class FetchClient {
       );
     } catch (error) {
       const { status, statusText, url } = response;
+
+      // Custom HTML error
       if (
         error instanceof Error &&
-        error.message.trim() !== 'Unexpected token < in JSON at position 0'
+        error.message.trim() === 'Unexpected token < in JSON at position 0'
       ) {
-        const errorMessage = `Original Error: ${error}. Error additional info: ${JSON.stringify(
-          {
-            url,
-            status,
-            statusText,
-          },
-        )}`;
-        const enhancedError = new Error(errorMessage);
-        enhancedError.stack = error.stack;
-        throw enhancedError;
+        throw new Error(
+          `Could not parse the response of the following request ${JSON.stringify(
+            {
+              url,
+              status,
+              statusText,
+            },
+          )}`,
+        );
       }
 
-      throw new Error(
-        `Could not parse the response of the following request ${JSON.stringify(
-          { url, status, statusText },
-        )}`,
-      );
+      // Custom unexpected token 'I' error
+      if (
+        error instanceof Error &&
+        error.message.trim().startsWith("Unexpected token 'I'")
+      ) {
+        throw new Error(
+          `Could not parse the response of the following request ${JSON.stringify(
+            {
+              url,
+              status,
+              statusText,
+              text,
+            },
+          )}`,
+        );
+      }
+
+      throw error;
     }
   }
 
