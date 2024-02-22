@@ -109,7 +109,16 @@ export class FetchClient {
         error instanceof Error &&
         error.message.trim() !== 'Unexpected token < in JSON at position 0'
       ) {
-        throw error;
+        const errorMessage = `Original Error: ${error}. Error additional info: ${JSON.stringify(
+          {
+            url,
+            status,
+            statusText,
+          },
+        )}`;
+        const enhancedError = new Error(errorMessage);
+        enhancedError.stack = error.stack;
+        throw enhancedError;
       }
 
       throw new Error(
