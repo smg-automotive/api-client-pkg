@@ -6,7 +6,6 @@ import { FetchClientConfiguration, RequestOptions } from './index';
 export class FetchClient {
   private readonly configuration: FetchClientConfiguration = {
     baseUrl: '',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     headers: { 'Content-Type': 'application/json' },
   };
 
