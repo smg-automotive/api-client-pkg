@@ -57,9 +57,7 @@ describe('ApiClient', () => {
       options: {
         baseUrl: 'https://petstoreapi.ch',
         headers: {
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           'Content-Type': 'text/xml',
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           'Accept-Language': 'fr-CH',
         },
       },
@@ -67,7 +65,6 @@ describe('ApiClient', () => {
     expect(fetch).toHaveBeenCalledWith(
       'https://petstoreapi.ch/listings/search',
       expect.objectContaining({
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         headers: { 'Content-Type': 'text/xml', 'Accept-Language': 'fr-CH' },
       }),
     );
@@ -78,14 +75,12 @@ describe('ApiClient', () => {
     const client = ApiClient<ListingClientConfiguration>({
       baseUrl: 'https://api.automotive.ch/api',
       headers: {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         'Accept-Language': 'fr-CH',
       },
     });
     await client.path('/listings/search').get({
       options: {
         headers: {
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           'Content-Type': 'text/xml',
         },
       },
@@ -93,7 +88,6 @@ describe('ApiClient', () => {
     expect(fetch).toHaveBeenCalledWith(
       'https://api.automotive.ch/api/listings/search',
       expect.objectContaining({
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         headers: { 'Content-Type': 'text/xml', 'Accept-Language': 'fr-CH' },
       }),
     );
