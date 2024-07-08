@@ -4,6 +4,10 @@ export type Listing = {
   make: string;
 };
 
+export type Seller = {
+  name: string;
+};
+
 interface DummySearchParams {
   test: string;
 }
@@ -52,4 +56,16 @@ export const listingClient = ApiClient<ListingClientConfiguration>({
       delete: sanitizeListing,
     },
   },
+});
+
+interface SellersSearchClientConfiguration extends ClientConfiguration {
+  '/sellers/search': {
+    post: (
+      data: RequestType<Seller, DummySearchParams>,
+    ) => ResponseType<object, Seller>;
+  };
+}
+
+export const sellersSearchClient = ApiClient<SellersSearchClientConfiguration>({
+  baseUrl: 'https://api.automotive.ch/api',
 });

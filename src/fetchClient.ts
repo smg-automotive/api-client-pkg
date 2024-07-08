@@ -166,12 +166,14 @@ export class FetchClient {
     path,
     body: originalBody,
     options,
+    searchParams,
     sanitizer,
   }: {
     path: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     body: any;
     options?: RequestOptions;
+    searchParams?: Record<string, string>;
     sanitizer?: DataSanitizer<T>;
   }): ResponseType<object, T> => {
     const headers = this.getHeaders(options);
@@ -184,7 +186,7 @@ export class FetchClient {
     }
 
     return FetchClient.returnData(
-      await fetch(this.getPath({ path, options }), {
+      await fetch(this.getPath({ path, options, searchParams }), {
         method: 'POST',
         headers,
         body,
