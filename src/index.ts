@@ -56,11 +56,12 @@ function StronglyTypedClient<Configuration extends ClientConfiguration>(
             sanitizer: pathSanitizers?.get,
           });
         },
-        post: ({ data, options } = { data: {}, options: {} }) => {
+        post: ({ data, options, searchParams } = { data: {}, options: {} }) => {
           return fetchClient.post({
             path: replacedPath,
             body: data,
             options,
+            searchParams,
             sanitizer: pathSanitizers?.post,
           });
         },

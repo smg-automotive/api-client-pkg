@@ -1,6 +1,7 @@
 import {
   listingClient,
   ListingClientConfiguration,
+  sellersSearchClient,
 } from '.jest/helpers/listingClient';
 import { mockFetchFailOnce, mockResolvedOnce } from '.jest/helpers/fetch';
 
@@ -158,7 +159,7 @@ describe('ApiClient', () => {
     );
   });
 
-  it('adds searchParams', async () => {
+  it('adds searchParams on method GET', async () => {
     mockResolvedOnce({ data: '12345' });
     await listingClient.path('/listings/search').get({
       options: {
@@ -168,6 +169,20 @@ describe('ApiClient', () => {
     });
     expect(fetch).toHaveBeenCalledWith(
       'https://petstoreapi.ch/listings/search?test=hereIAm',
+      expect.any(Object),
+    );
+  });
+
+  it('adds searchParams on method POST', async () => {
+    mockResolvedOnce({ data: '12345' });
+    await sellersSearchClient.path('/sellers/search').post({
+      options: {
+        baseUrl: 'https://petstoreapi.ch/',
+      },
+      searchParams: { test: 'hereIAm' },
+    });
+    expect(fetch).toHaveBeenCalledWith(
+      'https://petstoreapi.ch/sellers/search?test=hereIAm',
       expect.any(Object),
     );
   });
