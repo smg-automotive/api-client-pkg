@@ -119,23 +119,6 @@ export class FetchClient {
         );
       }
 
-      // Custom unexpected token 'I' error
-      if (
-        error instanceof Error &&
-        error.message.trim().startsWith("Unexpected token 'I'")
-      ) {
-        throw new Error(
-          `Could not parse the response of the following request ${JSON.stringify(
-            {
-              url,
-              status,
-              statusText,
-              text,
-            },
-          )}`,
-        );
-      }
-
       throw error;
     }
   }
