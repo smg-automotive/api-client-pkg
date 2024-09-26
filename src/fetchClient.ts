@@ -101,22 +101,22 @@ export class FetchClient {
         sanitizer ? sanitizer(parsedBody) : parsedBody,
       );
     } catch (error) {
-      const { status, statusText, url } = response;
+      const { url } = response;
 
       // Custom HTML error
       if (
         error instanceof Error &&
-        error.message.trim() === 'Unexpected token < in JSON at position 0'
+        error.message.trim().match(/Unexpected token .* JSON/)
       ) {
-        throw new Error(
-          `Could not parse the response of the following request ${JSON.stringify(
+        return FetchClient.buildResponseDataObject({ ...response, ok: false }, {
+          message: `Failed to parse JSON response from ${url}`,
+          globalErrors: [
             {
-              url,
-              status,
-              statusText,
+              code: 'JSON_PARSE_ERROR',
+              message: error.message,
             },
-          )}`,
-        );
+          ],
+        } as ResponseData);
       }
 
       throw error;
