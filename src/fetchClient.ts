@@ -35,9 +35,7 @@ export class FetchClient {
     ].join('/');
 
     const urlSearchParams = new URLSearchParams(searchParams).toString();
-    const queryString = `${urlSearchParams ? '?' : ''}${
-      urlSearchParams ? urlSearchParams : ''
-    }`;
+    const queryString = urlSearchParams ? `?${urlSearchParams}` : '';
 
     return `${normalizedPath}${queryString}`;
   }
