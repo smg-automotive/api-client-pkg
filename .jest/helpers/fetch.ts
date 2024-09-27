@@ -32,3 +32,18 @@ export const mockApiFailOnce = () => {
     }),
   );
 };
+
+export const mockUnexpectedHTMLOnce = () => {
+  fetchMock.mockImplementationOnce((url) =>
+    Promise.resolve({
+      url,
+      ok: true,
+      status: 200,
+      text: () => {
+        return Promise.resolve(
+          '<html><body>You have been blocked</body></html>',
+        );
+      },
+    }),
+  );
+};

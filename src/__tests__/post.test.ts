@@ -1,5 +1,5 @@
 import { listingClient } from '.jest/helpers/listingClient';
-import { mockResolvedOnce } from '.jest/helpers/fetch';
+import { mockResolvedOnce, mockUnexpectedHTMLOnce } from '.jest/helpers/fetch';
 
 describe('post', () => {
   it('calls fetch with POST', async () => {
@@ -29,5 +29,28 @@ describe('post', () => {
       .post({});
 
     expect(response.body).toEqual({ make: 'default make' });
+  });
+
+  it('handles JSON parsing errors', async () => {
+    expect.assertions(2);
+
+    mockUnexpectedHTMLOnce();
+    const response = await listingClient
+      .path('/listings/{listingId}/unsanitized', { listingId: 1 })
+      .post({});
+
+    if (!response.ok) {
+      // eslint-disable-next-line jest/no-conditional-expect
+      expect(response.body.message).toEqual(
+        'Failed to parse JSON response from https://api.automotive.ch/api/listings/1/unsanitized',
+      );
+      // eslint-disable-next-line jest/no-conditional-expect
+      expect(response.body.globalErrors).toContainEqual(
+        // eslint-disable-next-line jest/no-conditional-expect
+        expect.objectContaining({
+          code: 'JSON_PARSE_ERROR',
+        }),
+      );
+    }
   });
 });

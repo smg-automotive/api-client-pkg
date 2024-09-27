@@ -35,9 +35,7 @@ export class FetchClient {
     ].join('/');
 
     const urlSearchParams = new URLSearchParams(searchParams).toString();
-    const queryString = `${urlSearchParams ? '?' : ''}${
-      urlSearchParams ? urlSearchParams : ''
-    }`;
+    const queryString = urlSearchParams ? `?${urlSearchParams}` : '';
 
     return `${normalizedPath}${queryString}`;
   }
@@ -103,39 +101,22 @@ export class FetchClient {
         sanitizer ? sanitizer(parsedBody) : parsedBody,
       );
     } catch (error) {
-      const { status, statusText, url } = response;
+      const { url } = response;
 
       // Custom HTML error
       if (
         error instanceof Error &&
-        error.message.trim() === 'Unexpected token < in JSON at position 0'
+        error.message.trim().match(/Unexpected token .* JSON/)
       ) {
-        throw new Error(
-          `Could not parse the response of the following request ${JSON.stringify(
+        return FetchClient.buildResponseDataObject({ ...response, ok: false }, {
+          message: `Failed to parse JSON response from ${url}`,
+          globalErrors: [
             {
-              url,
-              status,
-              statusText,
+              code: 'JSON_PARSE_ERROR',
+              message: error.message,
             },
-          )}`,
-        );
-      }
-
-      // Custom unexpected token 'I' error
-      if (
-        error instanceof Error &&
-        error.message.trim().startsWith("Unexpected token 'I'")
-      ) {
-        throw new Error(
-          `Could not parse the response of the following request ${JSON.stringify(
-            {
-              url,
-              status,
-              statusText,
-              text,
-            },
-          )}`,
-        );
+          ],
+        } as ResponseData);
       }
 
       throw error;
