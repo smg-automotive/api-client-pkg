@@ -202,13 +202,15 @@ export class FetchClient {
     path,
     options,
     sanitizer,
+    searchParams,
   }: {
     path: string;
     options?: RequestOptions;
     sanitizer?: DataSanitizer<T>;
+    searchParams?: Record<string, string>;
   }): ResponseType<object, T> => {
     return FetchClient.returnData(
-      await fetch(this.getPath({ path, options }), {
+      await fetch(this.getPath({ path, options, searchParams }), {
         method: 'DELETE',
         headers: this.getHeaders(options),
       }),
