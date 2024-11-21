@@ -73,10 +73,11 @@ function StronglyTypedClient<Configuration extends ClientConfiguration>(
             sanitizer: pathSanitizers?.put,
           });
         },
-        delete: ({ options } = { options: {} }) => {
+        delete: ({ options, searchParams } = { options: {} }) => {
           return fetchClient.delete({
             path: replacedPath,
             options,
+            searchParams,
             sanitizer: pathSanitizers?.delete,
           });
         },

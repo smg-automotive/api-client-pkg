@@ -34,14 +34,9 @@ export class FetchClient {
       path.startsWith('/') ? path.slice(1) : path,
     ].join('/');
 
-    // eslint-disable-next-line no-console
-    console.log('SEARCH PARAMS: ', searchParams);
     const urlSearchParams = new URLSearchParams(searchParams).toString();
-    // eslint-disable-next-line no-console
-    console.log('URL SEARCH PARAMS: ', urlSearchParams);
     const queryString = urlSearchParams ? `?${urlSearchParams}` : '';
-    // eslint-disable-next-line no-console
-    console.log('QUERY STRING: ', queryString);
+
     return `${normalizedPath}${queryString}`;
   }
 
@@ -214,10 +209,6 @@ export class FetchClient {
     searchParams?: Record<string, string>;
     sanitizer?: DataSanitizer<T>;
   }): ResponseType<object, T> => {
-    // eslint-disable-next-line no-console
-    console.log('DELETE PATH: ', path);
-    // eslint-disable-next-line no-console
-    console.log('DELETE SEARCH PARAMS:', searchParams);
     return FetchClient.returnData(
       await fetch(this.getPath({ path, options, searchParams }), {
         method: 'DELETE',
