@@ -186,4 +186,18 @@ describe('ApiClient', () => {
       expect.any(Object),
     );
   });
+
+  it('adds searchParams on method DELETE', async () => {
+    mockResolvedOnce({ data: '12345' });
+    await sellersSearchClient.path('/sellers/search').delete({
+      options: {
+        baseUrl: 'https://petstoreapi.ch/',
+      },
+      searchParams: { test: 'hereIAm' },
+    });
+    expect(fetch).toHaveBeenCalledWith(
+      'https://petstoreapi.ch/sellers/search?test=hereIAm',
+      expect.any(Object),
+    );
+  });
 });

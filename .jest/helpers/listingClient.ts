@@ -63,6 +63,9 @@ interface SellersSearchClientConfiguration extends ClientConfiguration {
     post: (
       data: RequestType<Seller, DummySearchParams>,
     ) => ResponseType<object, Seller>;
+    delete: (
+      data: RequestType<Seller, DummySearchParams>,
+    ) => ResponseType<object, Seller>;
   };
 }
 

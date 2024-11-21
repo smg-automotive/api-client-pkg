@@ -201,14 +201,16 @@ export class FetchClient {
   delete = async <T>({
     path,
     options,
+    searchParams,
     sanitizer,
   }: {
     path: string;
     options?: RequestOptions;
+    searchParams?: Record<string, string>;
     sanitizer?: DataSanitizer<T>;
   }): ResponseType<object, T> => {
     return FetchClient.returnData(
-      await fetch(this.getPath({ path, options }), {
+      await fetch(this.getPath({ path, options, searchParams }), {
         method: 'DELETE',
         headers: this.getHeaders(options),
       }),
