@@ -8,7 +8,7 @@ export type PathParameters<P extends string> = Record<
   string | number
 >;
 
-const paramName = (param: string) => param.replace(/(\{|\})/g, '');
+const paramName = (param: string) => param.replace(/[{}]/g, '');
 
 export const replaceParameters = ({
   path,
