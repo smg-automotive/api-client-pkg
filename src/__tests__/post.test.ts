@@ -40,13 +40,11 @@ describe('post', () => {
       .post({});
 
     if (!response.ok) {
-      // eslint-disable-next-line jest/no-conditional-expect
       expect(response.body.message).toEqual(
         'Failed to parse JSON response from https://api.automotive.ch/api/listings/1/unsanitized',
       );
-      // eslint-disable-next-line jest/no-conditional-expect
+
       expect(response.body.globalErrors).toContainEqual(
-        // eslint-disable-next-line jest/no-conditional-expect
         expect.objectContaining({
           code: 'JSON_PARSE_ERROR',
         }),
