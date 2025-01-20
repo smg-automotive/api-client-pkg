@@ -188,6 +188,7 @@ export class FetchClient {
         method: 'POST',
         headers,
         body,
+        ...(options?.keepalive && { keepalive: true }),
       }),
       sanitizer,
     );

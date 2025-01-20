@@ -30,6 +30,7 @@ export interface RequestOptions {
   baseUrl?: string;
   headers?: Record<string, string>;
   accessToken?: string;
+  keepalive?: boolean;
 }
 
 function StronglyTypedClient<Configuration extends ClientConfiguration>(
