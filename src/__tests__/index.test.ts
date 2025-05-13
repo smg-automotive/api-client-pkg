@@ -110,6 +110,24 @@ describe('ApiClient', () => {
     );
   });
 
+  it('does not create an authorization header if null is passed as access token', async () => {
+    mockResolvedOnce({ data: '12345' });
+    await listingClient.path('/listings/search').get({
+      options: {
+        baseUrl: 'https://petstoreapi.ch',
+        accessToken: null,
+      },
+    });
+    expect(fetch).toHaveBeenCalledWith(
+      'https://petstoreapi.ch/listings/search',
+      expect.objectContaining({
+        headers: expect.not.objectContaining({
+          Authorization: expect.any(String),
+        }),
+      }),
+    );
+  });
+
   it('throws if no parameters are passed', async () => {
     await expect(async () => {
       await listingClient
