@@ -29,7 +29,7 @@ interface ApiClientConfiguration<Configuration extends ClientConfiguration>
 export interface RequestOptions {
   baseUrl?: string;
   headers?: Record<string, string>;
-  accessToken?: string;
+  accessToken?: string | null;
 }
 
 function StronglyTypedClient<Configuration extends ClientConfiguration>(
