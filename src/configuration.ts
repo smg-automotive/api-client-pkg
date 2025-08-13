@@ -12,7 +12,7 @@ export type RequestType<DataType = never, SearchParamsType = never> = {
 
 type Methods = {
   get?: (request: RequestType) => ResponseType<never, any>;
-  post?: (request: RequestType<any>) => ResponseType<any, any>;
+  post?: (request: RequestType) => ResponseType<any, any>;
   put?: (request: RequestType<any>) => ResponseType<any, any>;
   delete?: (request: RequestType) => ResponseType<never, any>;
 };
