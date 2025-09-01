@@ -138,6 +138,7 @@ export class FetchClient {
       await fetch(this.getPath({ path, options, searchParams }), {
         method: 'GET',
         headers: this.getHeaders(options),
+        ...(options?.next ? { next: options.next } : {}),
       }),
       sanitizer,
     );
