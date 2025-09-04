@@ -13,6 +13,38 @@ describe('post', () => {
     );
   });
 
+  it('passes the cache options to fetch', async () => {
+    mockResolvedOnce({ data: '12345' });
+    await listingClient.path('/listings/create').post({
+      data: { make: 'bmw' },
+      options: {
+        cache: 'no-store',
+      },
+    });
+    expect(fetch).toHaveBeenCalledWith(
+      'https://api.automotive.ch/api/listings/create',
+      expect.objectContaining({ cache: 'no-store' }),
+    );
+  });
+
+  it('passes the next options to fetch', async () => {
+    mockResolvedOnce({ data: '12345' });
+    await listingClient.path('/listings/create').post({
+      data: { make: 'bmw' },
+      options: {
+        next: {
+          revalidate: 10,
+          tags: ['listings'],
+        },
+      },
+    });
+
+    expect(fetch).toHaveBeenCalledWith(
+      'https://api.automotive.ch/api/listings/create',
+      expect.objectContaining({ next: { revalidate: 10, tags: ['listings'] } }),
+    );
+  });
+
   it('calls fetch with an empty body', async () => {
     mockResolvedOnce(null);
     await listingClient.path('/calculate').post({ data: null });

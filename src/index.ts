@@ -30,6 +30,11 @@ export interface RequestOptions {
   baseUrl?: string;
   headers?: Record<string, string>;
   accessToken?: string | null;
+  cache?: 'no-store' | 'force-cache';
+  next?: {
+    revalidate?: false | 0 | number;
+    tags?: string[];
+  };
 }
 
 function StronglyTypedClient<Configuration extends ClientConfiguration>(

@@ -13,6 +13,40 @@ describe('delete', () => {
     );
   });
 
+  it('passes the cache options to fetch', async () => {
+    mockResolvedOnce({ data: '12345' });
+    await listingClient
+      .path('/listings/{listingId}', { listingId: 123 })
+      .delete({
+        options: {
+          cache: 'no-store',
+        },
+      });
+    expect(fetch).toHaveBeenCalledWith(
+      'https://api.automotive.ch/api/listings/123',
+      expect.objectContaining({ cache: 'no-store' }),
+    );
+  });
+
+  it('passes the next options to fetch', async () => {
+    mockResolvedOnce({ data: '12345' });
+    await listingClient
+      .path('/listings/{listingId}', { listingId: 123 })
+      .delete({
+        options: {
+          next: {
+            revalidate: 10,
+            tags: ['listings'],
+          },
+        },
+      });
+
+    expect(fetch).toHaveBeenCalledWith(
+      'https://api.automotive.ch/api/listings/123',
+      expect.objectContaining({ next: { revalidate: 10, tags: ['listings'] } }),
+    );
+  });
+
   it('applies a sanitizer', async () => {
     mockResolvedOnce({});
     const response = await listingClient

@@ -15,6 +15,36 @@ describe('get', () => {
     );
   });
 
+  it('passes the cache options to fetch', async () => {
+    mockResolvedOnce({ make: 'bmw' });
+    await listingClient.path('/listings/search').get({
+      options: {
+        cache: 'no-store',
+      },
+    });
+    expect(fetch).toHaveBeenCalledWith(
+      'https://api.automotive.ch/api/listings/search',
+      expect.objectContaining({ cache: 'no-store' }),
+    );
+  });
+
+  it('passes the next options to fetch', async () => {
+    mockResolvedOnce({ make: 'bmw' });
+    await listingClient.path('/listings/search').get({
+      options: {
+        next: {
+          revalidate: 10,
+          tags: ['listings'],
+        },
+      },
+    });
+
+    expect(fetch).toHaveBeenCalledWith(
+      'https://api.automotive.ch/api/listings/search',
+      expect.objectContaining({ next: { revalidate: 10, tags: ['listings'] } }),
+    );
+  });
+
   it('applies a sanitizer', async () => {
     mockResolvedOnce({});
     const response = await listingClient
