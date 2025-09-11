@@ -22,7 +22,7 @@ export interface ListingClientConfiguration extends ClientConfiguration {
     ) => ResponseType<never, Listing>;
   };
   '/listings/{listingId}': {
-    delete: () => ResponseType;
+    delete: (data?: RequestType<never>) => ResponseType;
     put: (data: RequestType<Listing>) => ResponseType<Listing>;
   };
   'dealers/{dealerId}/listings/{listingId}': {
