@@ -50,7 +50,7 @@ export class FetchClient {
     };
   }
 
-  private getFetchOptions(options?: RequestOptions) {
+  private static getFetchOptions(options?: RequestOptions) {
     return {
       ...(options?.cache ? { cache: options.cache } : {}),
       ...(options?.next ? { next: options.next } : {}),
@@ -145,7 +145,7 @@ export class FetchClient {
       await fetch(this.getPath({ path, options, searchParams }), {
         method: 'GET',
         headers: this.getHeaders(options),
-        ...this.getFetchOptions(options),
+        ...FetchClient.getFetchOptions(options),
       }),
       sanitizer,
     );
@@ -179,7 +179,7 @@ export class FetchClient {
         method: 'POST',
         headers,
         body,
-        ...this.getFetchOptions(options),
+        ...FetchClient.getFetchOptions(options),
       }),
       sanitizer,
     );
@@ -202,7 +202,7 @@ export class FetchClient {
         method: 'PUT',
         headers: this.getHeaders(options),
         body: body && JSON.stringify(body),
-        ...this.getFetchOptions(options),
+        ...FetchClient.getFetchOptions(options),
       }),
       sanitizer,
     );
@@ -223,7 +223,7 @@ export class FetchClient {
       await fetch(this.getPath({ path, options, searchParams }), {
         method: 'DELETE',
         headers: this.getHeaders(options),
-        ...this.getFetchOptions(options),
+        ...FetchClient.getFetchOptions(options),
       }),
       sanitizer,
     );
