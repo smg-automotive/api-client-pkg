@@ -1,7 +1,11 @@
 import { DataSanitizer } from './sanitizers';
 import { ErrorResponse, ResponseType, SuccessResponse } from './responseType';
 
-import { FetchClientConfiguration, RequestOptions } from './index';
+import {
+  FetchClientConfiguration,
+  RequestOptions,
+  RequestOptionsWithCache,
+} from './index';
 
 export class FetchClient {
   private readonly configuration: FetchClientConfiguration = {
@@ -130,7 +134,7 @@ export class FetchClient {
     sanitizer,
   }: {
     path: string;
-    options?: RequestOptions;
+    options?: RequestOptionsWithCache;
     searchParams?: Record<string, string>;
     sanitizer?: DataSanitizer<T>;
   }): ResponseType<object, T> => {
@@ -138,6 +142,7 @@ export class FetchClient {
       await fetch(this.getPath({ path, options, searchParams }), {
         method: 'GET',
         headers: this.getHeaders(options),
+        ...(options?.cache ? { cache: options.cache } : {}),
         ...(options?.next ? { next: options.next } : {}),
       }),
       sanitizer,

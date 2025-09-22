@@ -30,7 +30,11 @@ export interface RequestOptions {
   baseUrl?: string;
   headers?: Record<string, string>;
   accessToken?: string | null;
-  next?: Record<string, unknown>;
+}
+
+export interface RequestOptionsWithCache extends RequestOptions {
+  next?: { revalidate?: false | 0 | number; tags?: string[] };
+  cache?: RequestCache;
 }
 
 function StronglyTypedClient<Configuration extends ClientConfiguration>(
