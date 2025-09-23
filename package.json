@@ -31,7 +31,7 @@
     "@rollup/plugin-commonjs": "28.0.6",
     "@rollup/plugin-node-resolve": "16.0.1",
     "@rollup/plugin-typescript": "12.1.4",
-    "@smg-automotive/eslint-config": "5.1.6",
+    "@smg-automotive/eslint-config": "5.1.7",
     "@types/jest": "30.0.0",
     "@types/node": "22.18.6",
     "jest": "30.1.3",
