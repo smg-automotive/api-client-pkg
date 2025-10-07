@@ -29,19 +29,19 @@
   "homepage": "https://github.com/smg-automotive/api-client-pkg#readme",
   "devDependencies": {
     "@rollup/plugin-commonjs": "28.0.6",
-    "@rollup/plugin-node-resolve": "16.0.1",
+    "@rollup/plugin-node-resolve": "16.0.2",
     "@rollup/plugin-typescript": "12.1.4",
-    "@smg-automotive/eslint-config": "5.1.9",
+    "@smg-automotive/eslint-config": "5.1.10",
     "@types/jest": "30.0.0",
     "@types/node": "22.18.8",
     "jest": "30.2.0",
     "rimraf": "6.0.1",
-    "rollup": "4.52.3",
+    "rollup": "4.52.4",
     "rollup-plugin-dts": "6.2.3",
     "rollup-plugin-peer-deps-external": "2.2.4",
     "semantic-release": "24.2.9",
     "ts-jest": "29.4.4",
     "ts-node": "10.9.2",
-    "typescript": "5.9.2"
+    "typescript": "5.9.3"
   }
 }
