@@ -11,8 +11,10 @@ import {
 import { FetchClient } from './fetchClient';
 import { ClientConfiguration, RequestType } from './configuration';
 
-export interface SortedAndPaginatedQuery<Query, SortType>
-  extends PaginatedQuery<Query> {
+export interface SortedAndPaginatedQuery<
+  Query,
+  SortType,
+> extends PaginatedQuery<Query> {
   sort: SortQuery<SortType>;
 }
 
@@ -21,8 +23,9 @@ export interface FetchClientConfiguration {
   headers: Record<string, string>;
 }
 
-interface ApiClientConfiguration<Configuration extends ClientConfiguration>
-  extends FetchClientConfiguration {
+interface ApiClientConfiguration<
+  Configuration extends ClientConfiguration,
+> extends FetchClientConfiguration {
   sanitizers: Sanitizers<Configuration>;
 }
 
