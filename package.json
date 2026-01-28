@@ -33,7 +33,7 @@
     "@rollup/plugin-typescript": "12.3.0",
     "@smg-automotive/eslint-config": "5.2.7",
     "@types/jest": "30.0.0",
-    "@types/node": "24.10.7",
+    "@types/node": "24.10.9",
     "jest": "30.2.0",
     "rimraf": "6.1.2",
     "rollup": "4.56.0",
