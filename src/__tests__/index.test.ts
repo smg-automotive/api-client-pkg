@@ -2,8 +2,8 @@ import {
   listingClient,
   ListingClientConfiguration,
   sellersSearchClient,
-} from '.jest/helpers/listingClient';
-import { mockFetchFailOnce, mockResolvedOnce } from '.jest/helpers/fetch';
+} from 'jest/helpers/listingClient';
+import { mockFetchFailOnce, mockResolvedOnce } from 'jest/helpers/fetch';
 
 import { ApiClient } from '../index';
 

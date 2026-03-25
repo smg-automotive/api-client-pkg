@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
+    "paths": {
+      "jest/*": ["jest/*"]
+    },
     "strict": true,
     "jsx": "react",
     "module": "esnext",
