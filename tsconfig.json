@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
-      "jest/*": ["jest/*"]
+      "@/*": ["./*"]
     },
     "strict": true,
     "jsx": "react",
@@ -11,14 +10,15 @@
     "declaration": true,
     "sourceMap": true,
     "outDir": "dist",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "types": ["jest", "node"]
   },
   "exclude": ["dist", "node_modules"],
-  "include": ["src"]
+  "include": ["src", "jest"]
 }
