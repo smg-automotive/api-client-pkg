@@ -1,9 +1,9 @@
-import { Listing, listingClient } from 'jest/helpers/listingClient';
+import { Listing, listingClient } from '@/jest/helpers/listingClient';
 import {
   mockApiFailOnce,
   mockResolvedOnce,
   mockUnexpectedHTMLOnce,
-} from 'jest/helpers/fetch';
+} from '@/jest/helpers/fetch';
 
 describe('get', () => {
   it('calls fetch with GET', async () => {

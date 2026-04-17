@@ -1,4 +1,4 @@
-import { fetchMock } from '../setup/fetchMock';
+import { fetchMock } from '@/jest/setup/fetchMock';
 
 export const mockResolvedOnce = (value: unknown) => {
   fetchMock.mockReturnValueOnce(

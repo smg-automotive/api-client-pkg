@@ -1,4 +1,4 @@
-import { replaceParameters } from '../pathParameters';
+import { replaceParameters } from '@/src/pathParameters';
 
 describe('#replaceParameters', () => {
   it('returns the same string if no curly brackets are used', () => {

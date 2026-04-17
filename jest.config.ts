@@ -4,7 +4,7 @@ export default {
   errorOnDeprecated: true,
   moduleDirectories: ['node_modules', '<rootDir>'],
   moduleNameMapper: {
-    '^jest/helpers/(.*)$': '<rootDir>/jest/helpers/$1',
+    '^@/(.*)$': '<rootDir>/$1',
   },
   preset: 'ts-jest/presets/js-with-ts',
   restoreMocks: true,
