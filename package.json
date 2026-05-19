@@ -33,7 +33,7 @@
     "@rollup/plugin-typescript": "12.3.0",
     "@smg-automotive/eslint-config": "6.0.3",
     "@types/jest": "30.0.0",
-    "@types/node": "24.12.2",
+    "@types/node": "24.12.4",
     "eslint": "10.3.0",
     "eslint-import-resolver-typescript": "4.4.4",
     "jest": "30.3.0",
