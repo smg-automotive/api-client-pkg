@@ -31,6 +31,11 @@ export interface SuccessResponse<Body> extends LeanResponse {
   body: Body;
 }
 
+export interface StreamSuccessResponse extends LeanResponse {
+  ok: true;
+  body: ReadableStream<Uint8Array>;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type UnwrapResponseUnion<T extends Awaited<ResponseType<any, any>>> =
   T extends SuccessResponse<infer Body> ? Body : never;
@@ -43,3 +48,7 @@ export type ResponseType<
   RequestData extends object = object,
   Body = never,
 > = Promise<ErrorResponse<RequestData> | SuccessResponse<Body>>;
+
+export type StreamResponseType<RequestData extends object = object> = Promise<
+  ErrorResponse<RequestData> | StreamSuccessResponse
+>;
