@@ -3,6 +3,7 @@ import {
   ClientConfiguration,
   RequestType,
   ResponseType,
+  StreamResponseType,
 } from '@/src';
 
 export type Listing = {
@@ -35,6 +36,11 @@ export interface ListingClientConfiguration extends ClientConfiguration {
   };
   '/listings/create': {
     post: (data: RequestType<Listing>) => ResponseType<Listing>;
+  };
+  '/listings/create-stream': {
+    postStream: (
+      data: RequestType<Listing, DummySearchParams>,
+    ) => StreamResponseType<Listing>;
   };
   '/calculate': {
     post: (data: RequestType<null>) => ResponseType<Listing>;
