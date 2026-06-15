@@ -1,6 +1,12 @@
 import { SortedQuery, SortOrderParams, SortParams, SortQuery } from './sort';
 import { Sanitizers } from './sanitizers';
-import { ErrorResponse, ResponseType, SuccessResponse } from './responseType';
+import {
+  ErrorResponse,
+  ResponseType,
+  StreamResponseType,
+  StreamSuccessResponse,
+  SuccessResponse,
+} from './responseType';
 import { replaceParameters } from './pathParameters';
 import { Path } from './path';
 import {
@@ -33,6 +39,7 @@ export interface RequestOptions {
   baseUrl?: string;
   headers?: Record<string, string>;
   accessToken?: string | null;
+  signal?: AbortSignal;
   cache?: 'no-store' | 'force-cache';
   next?: {
     revalidate?: false | 0 | number;
@@ -73,6 +80,19 @@ function StronglyTypedClient<Configuration extends ClientConfiguration>(
             sanitizer: pathSanitizers?.post,
           });
         },
+        postStream: (
+          { data, options, searchParams } = {
+            data: {},
+            options: {},
+          },
+        ) => {
+          return fetchClient.postStream({
+            path: replacedPath,
+            body: data,
+            options,
+            searchParams,
+          });
+        },
         put: ({ data, options } = { data: {}, options: {} }) => {
           return fetchClient.put({
             path: replacedPath,
@@ -98,6 +118,8 @@ export {
   StronglyTypedClient as ApiClient,
   ClientConfiguration,
   ResponseType,
+  StreamResponseType,
+  StreamSuccessResponse,
   RequestType,
   SuccessResponse,
   ErrorResponse,

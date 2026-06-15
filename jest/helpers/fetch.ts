@@ -12,6 +12,29 @@ export const mockResolvedOnce = (value: unknown) => {
   );
 };
 
+export const mockResolvedStreamOnce = (
+  value: ReadableStream<Uint8Array> = new ReadableStream<Uint8Array>(),
+) => {
+  fetchMock.mockReturnValueOnce(
+    Promise.resolve({
+      status: 200,
+      ok: true,
+      body: value,
+    }),
+  );
+};
+
+export const mockMissingStreamBodyOnce = () => {
+  fetchMock.mockReturnValueOnce(
+    Promise.resolve({
+      status: 200,
+      ok: true,
+      body: null,
+      url: 'https://api.automotive.ch/api/listings/create-stream',
+    }),
+  );
+};
+
 export const mockFetchFailOnce = () => {
   fetchMock.mockReturnValueOnce(Promise.reject(new Error()));
 };

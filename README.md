@@ -207,6 +207,30 @@ if (response.ok) {
 }
 ```
 
+### Streaming responses
+
+For endpoints that return a readable response body, such as server-sent events over a `POST` request, use `postStream`.
+It keeps the same path parameters, request body, search params, headers, and authorization handling as `post`, but returns
+the `ReadableStream<Uint8Array>` without consuming it.
+
+```typescript
+interface ChatClientConfiguration extends ClientConfiguration {
+  'conversations/{conversationId}/messages': {
+    postStream: (
+      request: RequestType<{ text: string }>
+    ) => StreamResponseType<{ text: string }>;
+  };
+}
+
+const response = await chatClient
+  .path('conversations/{conversationId}/messages', { conversationId })
+  .postStream({ data: { text: 'Hello' }, options: { signal } });
+
+if (response.ok) {
+  const reader = response.body.getReader();
+}
+```
+
 ### Testing
 
 Create a file in the `__mocks__` directory called `@smg-automotive/api-client-pkg.ts` with the following content:

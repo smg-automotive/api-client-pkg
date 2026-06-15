@@ -6,6 +6,13 @@ export const ApiClient = () => ({
     post: jest
       .fn()
       .mockReturnValue(Promise.resolve({ status: 201, body: {}, ok: true })),
+    postStream: jest.fn().mockReturnValue(
+      Promise.resolve({
+        status: 201,
+        body: new ReadableStream<Uint8Array>(),
+        ok: true,
+      }),
+    ),
     put: jest
       .fn()
       .mockReturnValue(Promise.resolve({ status: 204, body: {}, ok: true })),

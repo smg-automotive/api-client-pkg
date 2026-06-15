@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { ResponseType } from './responseType';
+import { ResponseType, StreamResponseType } from './responseType';
 
 import { RequestOptions } from './index';
 
@@ -13,6 +13,7 @@ export type RequestType<DataType = never, SearchParamsType = never> = {
 type Methods = {
   get?: (request: RequestType) => ResponseType<never, any>;
   post?: (request: RequestType<any>) => ResponseType<any, any>;
+  postStream?: (request: RequestType<any>) => StreamResponseType<any>;
   put?: (request: RequestType<any>) => ResponseType<any, any>;
   delete?: (request: RequestType) => ResponseType<never, any>;
 };

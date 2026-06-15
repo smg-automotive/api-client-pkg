@@ -1,5 +1,10 @@
 import { DataSanitizer } from './sanitizers';
-import { ErrorResponse, ResponseType, SuccessResponse } from './responseType';
+import {
+  ErrorResponse,
+  ResponseType,
+  StreamResponseType,
+  SuccessResponse,
+} from './responseType';
 
 import { FetchClientConfiguration, RequestOptions } from './index';
 
@@ -54,6 +59,7 @@ export class FetchClient {
     return {
       ...(options?.cache ? { cache: options.cache } : {}),
       ...(options?.next ? { next: options.next } : {}),
+      ...(options?.signal ? { signal: options.signal } : {}),
     };
   }
 
@@ -183,6 +189,76 @@ export class FetchClient {
       }),
       sanitizer,
     );
+  };
+
+  postStream = async <RequestData extends object>({
+    path,
+    body: originalBody,
+    options,
+    searchParams,
+  }: {
+    path: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    body: any;
+    options?: RequestOptions;
+    searchParams?: Record<string, string>;
+  }): StreamResponseType<RequestData> => {
+    const headers = this.getHeaders(options);
+    let body = originalBody && JSON.stringify(originalBody);
+
+    // Form data needs to be plain with no content type set
+    if (originalBody instanceof FormData) {
+      delete headers['Content-Type'];
+      body = originalBody;
+    }
+
+    const response = await fetch(
+      this.getPath({ path, options, searchParams }),
+      {
+        method: 'POST',
+        headers,
+        body,
+        ...FetchClient.getFetchOptions(options),
+      },
+    );
+
+    if (!response.ok) {
+      return FetchClient.returnData<never, RequestData>(response);
+    }
+
+    const {
+      headers: responseHeaders,
+      redirected,
+      status,
+      statusText,
+      type,
+      url,
+    } = response;
+    const baseResponse = {
+      headers: responseHeaders,
+      redirected,
+      status,
+      statusText,
+      type,
+      url,
+    };
+
+    if (!response.body) {
+      return {
+        ok: false,
+        body: {
+          code: 'STREAM_RESPONSE_BODY_MISSING',
+          message: `No stream response body returned from ${response.url}`,
+        },
+        ...baseResponse,
+      };
+    }
+
+    return {
+      ok: true,
+      body: response.body,
+      ...baseResponse,
+    };
   };
 
   put = async <T>({
